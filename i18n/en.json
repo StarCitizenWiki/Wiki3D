@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"wiki3d-desc": "Interact with 3D Files",
+	"wiki3d-i18n-welcome": "Welcome to the localization file of the Wiki3D extension.",
+	"wiki3d-shipviewer": "{{SITENAME}} Ship Viewer",
+	"helloworld": "Hello world"
+}
