@@ -1,4 +1,21 @@
-#shipWrapper {
-    width: 100%;
-    height: 80vh;
+#w3dWrapper {
+    position: relative;
+}
+
+#w3dWrapper .controls {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+}
+
+#w3dWrapper .form-group-wrapper {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+}
+
+#w3dWrapper canvas {
+    width: 100% !important;
+    height: auto !important;
 }

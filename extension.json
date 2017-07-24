@@ -10,6 +10,7 @@
   "type": "parserhook",
   "AutoloadClasses": {
     "Wiki3DHooks": "Wiki3D.hooks.php",
+    "Wiki3D": "Wiki3D.class.php",
     "SpecialShipViewer": "specials/SpecialShipViewer.php"
   },
   "config": {
@@ -58,13 +59,19 @@
     },
     "ext.w3d.viewer": {
       "scripts": [
-        "modules/threejs/controls/OrbitControls.js"
+        "modules/threejs/controls/OrbitControls.js",
+        "modules/ext.w3d.viewloader.js"
       ],
       "styles": [
         "modules/ext.w3d.shipviewer.css"
       ],
       "messages": [],
       "dependencies": []
+    },
+    "ext.w3d.shipviewer": {
+      "scripts": [
+        "modules/ext.w3d.shipviewer.js"
+      ]
     }
   },
   "ResourceFileModulePaths": {
