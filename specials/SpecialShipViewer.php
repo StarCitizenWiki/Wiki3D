@@ -41,7 +41,7 @@ class SpecialShipViewer extends SpecialPage {
         } else {
             $viewerConfig['ctm']['path'] = $file->getFullUrl();
             $viewerConfig['scene']['controls']['enable'] = true;
-            $viewerConfig['scene']['camera']['position']['z'] = 200;
+            $viewerConfig['renderer']['resolution'] = 'fullhd';
         }
 
         $jsConfig['w3d']['ctm']['configs'][] = $viewerConfig;
@@ -127,15 +127,7 @@ class SpecialShipViewer extends SpecialPage {
         
         <div class="form-group-wrapper">
             <p class="title">Lights</p>
-            <div class="form-group">
-                <button id="lightsHemisphereToggle">Toggle Hemisphere Light</button>
-            </div>
-            <div class="form-group">
-                <button id="lightsDirectional1Toggle">Toggle Directional Light 1</button>
-            </div>
-            <div class="form-group">
-                <button id="lightsDirectional2Toggle">Toggle Directional Light 1</button>
-            </div>
+            <div id="lightList"></div>
         </div>
                 
         <div class="form-group-wrapper">
@@ -143,7 +135,8 @@ class SpecialShipViewer extends SpecialPage {
             <div class="form-group">
                 <label for="resolutionSelect">Resolution</label>
                 <select id="resolutionSelect">
-                    <option value="hd">HD (720p)</option>
+                    <option value="sd">SD</option>
+                    <option value="hd" selected>HD (720p)</option>
                     <option value="fullhd">FullHD (1080p)</option>
                     <option value="ultrahd_4k">UltraHD (4k)</option>
                 </select>

@@ -1,16 +1,6 @@
 ( function () {
-    var toggleWireFrame,
-        updateShip,
-        changeShipColor,
-        changeScene,
-        changeMaterial,
-        changeCameraFOV,
-        changeRenderResolution,
-        downloadImage,
-        toggleLight,
-        getLightList;
-
     const POSITIONS = ['x', 'y', 'z'];
+    const SHIP_POSITION_TYPES = ['position', 'rotation'];
 
     /**
      * @class mw.w3d.CTMViewer
@@ -18,92 +8,6 @@
      * @constructor
      */
     function CTMViewer(config) {
-
-        getLightList = function () {
-            console.log(sceneObject);
-        };
-
-        toggleWireFrame = function () {
-            ctmObject.material.wireframe = !ctmObject.material.wireframe;
-        };
-
-        updateShip = function (type, update) {
-            if (POSITIONS.indexOf(update.target) > -1 && ['position', 'rotation'].indexOf(type) > -1) {
-                ctmObject[type][update.target] = update.value;
-            }
-        };
-
-        changeShipColor = function (event) {
-            var color = event.target.value;
-            color = color.replace('#', '0x');
-            config.materials.color = color;
-            updateCTMColor();
-        };
-
-        changeScene = function (event) {
-            var select = event.target;
-            var selectedScene = select.options[select.selectedIndex].value;
-
-            sceneObject.remove(sceneGroups[config.scene.current]);
-            sceneObject.add(sceneGroups[selectedScene]);
-            config.scene.current = selectedScene;
-        };
-
-        changeMaterial = function (event) {
-            var select = event.target;
-            var selectedMaterial = select.options[select.selectedIndex].value;
-            var material = materials[selectedMaterial];
-            if (typeof material !== 'undefined') {
-                material.wireframe = ctmObject.material.wireframe;
-                material.color = ctmObject.material.color;
-                ctmObject.material = material;
-            } else {
-                console.error('Material '+selectedMaterial+' does not exist');
-            }
-        };
-
-        changeCameraFOV = function (event) {
-            cameraObject.fov = event.target.value;
-            cameraObject.updateProjectionMatrix();
-        };
-
-        changeRenderResolution = function (event) {
-            var select = event.target;
-            var selected = select.options[select.selectedIndex].value;
-            selected = mw.w3d.getResolution(selected);
-
-            renderObject.setPixelRatio(window.devicePixelRatio);
-            renderObject.setSize(
-                selected.width,
-                selected.height
-            );
-            cameraObject.updateProjectionMatrix();
-        };
-
-        downloadImage = function () {
-            render();
-            window.open(renderObject.domElement.toDataURL("image/png"));
-        };
-
-        toggleLight = function (event) {
-            switch (event.target.id) {
-                case 'lightsHemisphereToggle':
-                    sceneObject.getObjectByName('hemisphere').visible = !sceneObject.getObjectByName('hemisphere').visible;
-                    break;
-
-                case 'lightsDirectional1Toggle':
-                    sceneObject.getObjectByName('directional_1').visible = !sceneObject.getObjectByName('directional_1').visible;
-                    break;
-
-                case 'lightsDirectional2Toggle':
-                    sceneObject.getObjectByName('directional_2').visible = !sceneObject.getObjectByName('directional_2').visible;
-                    break;
-
-                default:
-                    break;
-            }
-        };
-
         var ctmObject,
             sceneObject,
             renderObject,
@@ -111,6 +15,77 @@
             cameraObject,
             sceneGroups,
             materials;
+
+        this.getLightList = function () {
+            return sceneObject;
+        };
+
+        this.toggleWireFrame = function () {
+            if (typeof ctmObject.material.wireframe !== 'undefined') {
+                ctmObject.material.wireframe = !ctmObject.material.wireframe;
+            }
+        };
+
+        this.updateShip = function (type, update) {
+            if (POSITIONS.indexOf(update.target) > -1 && SHIP_POSITION_TYPES.indexOf(type) > -1) {
+                ctmObject[type][update.target] = update.value;
+            }
+
+        };
+
+        this.changeShipColor = function (hexColor) {
+            config.materials.color = hexColor;
+            updateCTMColor();
+        };
+
+        this.changeScene = function (sceneName) {
+            if (sceneName in sceneGroups) {
+                sceneObject.remove(sceneGroups[config.scene.current]);
+                sceneObject.add(sceneGroups[sceneName]);
+                config.scene.current = sceneName;
+            } else {
+                console.error('Scene '+sceneName+' does not exist');
+            }
+        };
+
+        this.changeMaterial = function (materialName) {
+            if (materialName in materials) {
+                var material = materials[materialName];
+                if (typeof material.wireframe !== 'undefined' &&
+                    typeof ctmObject.material !== 'undefined' &&
+                    typeof ctmObject.material.wirefram !== 'undefined'
+                ) {
+                    material.wireframe = ctmObject.material.wireframe;
+                }
+                material.color = ctmObject.material.color;
+                ctmObject.material = material;
+            } else {
+                console.error('Material '+materialName+' does not exist');
+            }
+        };
+
+        this.changeCameraFOV = function (value) {
+            cameraObject.fov = value;
+            cameraObject.updateProjectionMatrix();
+        };
+
+        this.changeRenderResolution = function (resolutionName) {
+            if (typeof mw.w3d.getResolution(resolutionName) !== 'undefined') {
+                resolution = mw.w3d.getResolution(resolutionName);
+                renderObject.setPixelRatio(window.devicePixelRatio);
+                renderObject.setSize(
+                    resolution.width,
+                    resolution.height
+                );
+            } else {
+                console.error('Resolution '+resolutionName+' does not exist');
+            }
+        };
+
+        this.downloadImage = function () {
+            render();
+            window.open(renderObject.domElement.toDataURL("image/png"));
+        };
 
         function init() {
             sceneGroups = mw.w3d.getSceneGroups();
@@ -225,6 +200,7 @@
 
         function start() {
             assembleScene();
+            configureCamera()
             addRenderElement();
             animate();
         }
@@ -232,7 +208,13 @@
         function assembleScene() {
             sceneObject.add(ctmObject);
             sceneObject.add(sceneGroups[config.scene.current]);
-            sceneObject.userData.lightList = sceneGroups[config.scene.current].userData;
+            sceneObject.userData.lightList = sceneGroups[config.scene.current].userData.lightList;
+        }
+
+        function configureCamera() {
+            var box = new THREE.Box3().setFromObject(ctmObject);
+            console.log( box.getSize() );
+            cameraObject.position.z = box.getSize().x + config.scene.camera.position.z;
         }
 
         function addRenderElement() {
@@ -258,39 +240,6 @@
             init();
         }
     }
-
-    CTMViewer.prototype = {
-        toggleWireFrame: function () {
-            toggleWireFrame();
-        },
-        updateShip: function (type, update) {
-            updateShip(type, update);
-        },
-        changeShipColor: function (event) {
-            changeShipColor(event);
-        },
-        changeScene: function (event) {
-            changeScene(event);
-        },
-        changeMaterial: function (event) {
-            changeMaterial(event);
-        },
-        changeCameraFOV: function (event) {
-            changeCameraFOV(event);
-        },
-        changeRenderResolution: function (event) {
-            changeRenderResolution(event);
-        },
-        downloadImage: function () {
-            downloadImage();
-        },
-        toggleLight: function (event) {
-            toggleLight(event);
-        },
-        getLightList: function () {
-            getLightList();
-        }
-    };
 
     mw.w3d.CTMViewer = CTMViewer;
 }() );

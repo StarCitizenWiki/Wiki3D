@@ -29,7 +29,7 @@ class Wiki3D
                 'scale' => 1,
                 'rotation' => [
                     'x' => 0,
-                    'y' => 0,
+                    'y' => M_PI_2,
                     'z' => 0,
                     'speed' => [
                         'x' => 0,
@@ -49,7 +49,7 @@ class Wiki3D
                     'fov' => 60,
                     'aspect' => 0,
                     'near' => 1,
-                    'far' => 10000,
+                    'far' => 100000,
                     'position' => [
                         'x' => 0,
                         'y' => 0,
@@ -68,7 +68,7 @@ class Wiki3D
                     'rotate_speed' => 0.05,
                     'pan_speed' => 2,
                     'min_distance' => 1,
-                    'max_distance' => 5000,
+                    'max_distance' => 10000,
                 ],
             ],
             'renderer' => [

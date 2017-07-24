@@ -66,11 +66,17 @@
         "modules/ext.w3d.shipviewer.css"
       ],
       "messages": [],
-      "dependencies": []
+      "dependencies": [
+        "ext.w3d.threejs"
+      ]
     },
     "ext.w3d.shipviewer": {
       "scripts": [
         "modules/ext.w3d.shipviewer.js"
+      ],
+      "dependencies": [
+        "ext.w3d.threejs",
+        "ext.w3d.viewer"
       ]
     }
   },

@@ -1,18 +1,15 @@
 $( function () {
-    var w3dConfig = mw.config.get('w3d');
     var ctmViewer;
 
-    if (w3dConfig !== null) {
-        ctmViewer = w3dConfig.ctm.viewers;
+    if (mw.config.get('w3d') !== null) {
+        ctmViewer = mw.config.get('w3d').ctm.viewers[0];
         addEventListener();
-        for (var i=0; i<ctmViewer.length; i++) {
-
-        }
+        //addLightList();
     }
 
     function addEventListener() {
         document.getElementById('shipWireframe').addEventListener('click', function() {
-            ctmViewer[0].toggleWireFrame();
+            ctmViewer.toggleWireFrame();
         });
         document.getElementById('shipRotationX').addEventListener('input', changeRotation);
         document.getElementById('shipRotationY').addEventListener('input', changeRotation);
@@ -21,32 +18,39 @@ $( function () {
         document.getElementById('shipPositionY').addEventListener('input', changePosition);
         document.getElementById('shipPositionZ').addEventListener('input', changePosition);
 
-        document.getElementById('lightsHemisphereToggle').addEventListener('click', toggleLight);
-        document.getElementById('lightsDirectional1Toggle').addEventListener('click', toggleLight);
-        document.getElementById('lightsDirectional2Toggle').addEventListener('click', toggleLight);
-
         document.getElementById('shipColor').addEventListener('change', function(event) {
-            ctmViewer[0].changeShipColor(event);
+            var color = event.target.value;
+            color = color.replace('#', '0x');
+            ctmViewer.changeShipColor(color);
         });
 
         document.getElementById('sceneScene').addEventListener('change', function(event) {
-            ctmViewer[0].changeScene(event);
+            var select = event.target;
+            var selectedScene = select.options[select.selectedIndex].value;
+
+            ctmViewer.changeScene(selectedScene);
         });
 
         document.getElementById('shipMaterial').addEventListener('change', function(event) {
-            ctmViewer[0].changeMaterial(event);
+            var select = event.target;
+            var selectedMaterial = select.options[select.selectedIndex].value;
+
+            ctmViewer.changeMaterial(selectedMaterial);
         });
 
         document.getElementById('cameraFOV').addEventListener('input', function(event) {
-            ctmViewer[0].changeCameraFOV(event);
+            ctmViewer.changeCameraFOV(event.target.value);
         });
 
         document.getElementById('resolutionSelect').addEventListener('input', function(event) {
-            ctmViewer[0].changeRenderResolution(event);
+            var select = event.target;
+            var selected = select.options[select.selectedIndex].value;
+
+            ctmViewer.changeRenderResolution(selected);
         });
 
         document.getElementById('sceneDownload').addEventListener('click', function() {
-            ctmViewer[0].downloadImage();
+            ctmViewer.downloadImage();
         });
 
     }
@@ -73,7 +77,7 @@ $( function () {
             default:
                 break;
         }
-        ctmViewer[0].updateShip('rotation', update);
+        ctmViewer.updateShip('rotation', update);
     }
 
     function changePosition(event) {
@@ -98,10 +102,11 @@ $( function () {
             default:
                 break;
         }
-        ctmViewer[0].updateShip('position', update);
+        ctmViewer.updateShip('position', update);
     }
 
     function toggleLight(event) {
-        ctmViewer[0].toggleLight(event);
+        ctmViewer.toggleLight(event);
     }
+
 });

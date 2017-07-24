@@ -75,7 +75,7 @@
                     geometry: {
                         type: 'sphere',
                         config: {
-                            radius: 2000,
+                            radius: 10000,
                             widthSegments: 25,
                             heightSegments: 25
                         }
@@ -129,7 +129,7 @@
                     geometry: {
                         type: 'sphere',
                         config: {
-                            radius: 2000,
+                            radius: 10000,
                             widthSegments: 25,
                             heightSegments: 25
                         }
@@ -177,6 +177,11 @@
     ];
 
     const RESOLUTIONS = {
+        sd: {
+            width: 640,
+            height: 360,
+            aspect: 16/9
+        },
         hd: {
             width: 1280,
             height: 720,
@@ -383,12 +388,12 @@
     }
 
     function createGroups() {
-        var i, j, groups = {};
+        var groups = {};
 
-        for (i=0; i<SCENES.length; ++i) {
+        for (let i=0; i<SCENES.length; ++i) {
             var group = new THREE.Group();
             if ('meshes' in SCENES[i]) {
-                for (j=0; j<SCENES[i].meshes.length; ++j) {
+                for (let j=0; j<SCENES[i].meshes.length; ++j) {
                     var geometry = geometryFactory(
                         SCENES[i].meshes[j].geometry.type,
                         SCENES[i].meshes[j].geometry.config
@@ -406,7 +411,7 @@
 
             if ('lights' in SCENES[i]) {
                 var lightList = [];
-                for (j=0; j<SCENES[i].lights.length; ++j) {
+                for (let j=0; j<SCENES[i].lights.length; ++j) {
                     var lightData = SCENES[i].lights[j];
                     var light = lightFactory(lightData.type, lightData.config);
                     if ('position' in lightData) {
@@ -419,8 +424,9 @@
                     light.name = lightData.name || '';
 
                     lightList.push({
-                        "uuid": light.uuid,
-                        "name": light.name
+                        'uuid': light.uuid,
+                        'name': light.name,
+                        'list_name': light.list_name
                     });
                     group.add(light);
                 }
