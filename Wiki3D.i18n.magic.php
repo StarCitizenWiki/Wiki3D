@@ -10,10 +10,13 @@ $magicWords = [];
 
 /** English (English) */
 $magicWords['en'] = [
-   'something' => [0, 'something'],
+	'PlanetViewer' => [ 0, 'PlanetViewer' ],
+	'ColladaViewer' => [ 0, 'ColladaViewer' ],
+	'CTMViewer' => [ 0, 'CTMViewer' ],
 ];
-
-/** German (German) */
+/** English (English) */
 $magicWords['de'] = [
-   'something' => [0, 'something'],
+	'PlanetViewer' => [ 0, 'PlanetViewer' ],
+	'ColladaViewer' => [ 0, 'ColladaViewer' ],
+	'CTMViewer' => [ 0, 'CTMViewer' ],
 ];

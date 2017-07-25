@@ -1,91 +1,97 @@
 {
-  "name": "Wiki3D",
-  "version": "0.1.0",
-  "author": [
-    "[https://star-citizen.wiki/User:FoXFTW FoXFTW]"
-  ],
-  "url": "https://star-citizen.wiki",
-  "descriptionmsg": "wiki3d-desc",
-  "license-name": "-",
-  "type": "parserhook",
-  "AutoloadClasses": {
-    "Wiki3DHooks": "Wiki3D.hooks.php",
-    "Wiki3D": "Wiki3D.class.php",
-    "SpecialShipViewer": "specials/SpecialShipViewer.php"
-  },
-  "config": {
-    "Wiki3DEnableFoo": true
-  },
-  "ExtensionMessagesFiles": {
-    "Wiki3DAlias": "Wiki3D.i18n.alias.php"
-  },
-  "Hooks": {
-    "ParserFirstCallInit": [
-      "Wiki3DHooks::onParserFirstCallInit"
-    ]
-  },
-  "MessagesDirs": {
-    "Wiki3D": [
-      "i18n"
-    ]
-  },
-  "ResourceModules": {
-    "ext.w3d.threejs": {
-      "scripts": [
-        "modules/threejs/three.js",
-        "modules/threejs/libs/Detector.js",
-        "modules/ext.w3d.js"
-      ]
-    },
-    "ext.w3d.ctm": {
-      "scripts": [
-        "modules/threejs/ctm/lzma.js",
-        "modules/threejs/ctm/ctm.js",
-        "modules/threejs/ctm/CTMLoader.js",
-        "modules/ext.w3d.CTMViewer.js"
-      ],
-      "dependencies": [
-        "ext.w3d.threejs"
-      ]
-    },
-    "ext.w3d.collada": {
-      "scripts": [
-        "modules/threejs/collada/ColladaLoader.js",
-        "modules/ext.w3d.Collada.js"
-      ],
-      "dependencies": [
-        "ext.w3d.threejs"
-      ]
-    },
-    "ext.w3d.viewer": {
-      "scripts": [
-        "modules/threejs/controls/OrbitControls.js",
-        "modules/ext.w3d.viewloader.js"
-      ],
-      "styles": [
-        "modules/ext.w3d.shipviewer.css"
-      ],
-      "messages": [],
-      "dependencies": [
-        "ext.w3d.threejs"
-      ]
-    },
-    "ext.w3d.shipviewer": {
-      "scripts": [
-        "modules/ext.w3d.shipviewer.js"
-      ],
-      "dependencies": [
-        "ext.w3d.threejs",
-        "ext.w3d.viewer"
-      ]
-    }
-  },
-  "ResourceFileModulePaths": {
-    "localBasePath": "",
-    "remoteExtPath": "Wiki3D"
-  },
-  "SpecialPages": {
-    "ShipViewer": "SpecialShipViewer"
-  },
-  "manifest_version": 1
+	"name": "Wiki3D",
+	"version": "0.1.0",
+	"author": [
+		"[https://star-citizen.wiki/User:FoXFTW FoXFTW]"
+	],
+	"url": "https://star-citizen.wiki",
+	"descriptionmsg": "wiki3d-desc",
+	"license-name": "-",
+	"type": "parserhook",
+	"AutoloadClasses": {
+		"Wiki3DHooks": "Wiki3D.hooks.php",
+		"Wiki3D": "Wiki3D.class.php",
+		"SpecialShipViewer": "specials/SpecialShipViewer.php"
+	},
+	"config": {
+		"Wiki3DEnableFoo": true
+	},
+	"ExtensionMessagesFiles": {
+		"Wiki3DAlias": "Wiki3D.i18n.alias.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"Wiki3DHooks::onParserFirstCallInit"
+		]
+	},
+	"MessagesDirs": {
+		"Wiki3D": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"ext.w3d.threejs": {
+			"scripts": [
+				"modules/threejs/three.js",
+				"modules/threejs/libs/Detector.js",
+				"modules/ext.w3d.js"
+			]
+		},
+		"ext.w3d.ctm": {
+			"scripts": [
+				"modules/threejs/ctm/lzma.js",
+				"modules/threejs/ctm/ctm.js",
+				"modules/threejs/ctm/CTMLoader.js",
+				"modules/viewer/ext.w3d.CTMViewer.js"
+			],
+			"dependencies": [
+				"ext.w3d.threejs"
+			]
+		},
+		"ext.w3d.collada": {
+			"scripts": [
+				"modules/threejs/collada/ColladaLoader.js",
+				"modules/viewer/ext.w3d.ColladaViewer.js"
+			],
+			"dependencies": [
+				"ext.w3d.threejs"
+			]
+		},
+		"ext.w3d.specials.shipviewer": {
+			"scripts": [
+				"modules/threejs/controls/OrbitControls.js",
+				"modules/viewer/ext.w3d.viewloader.js",
+				"modules/specials/ext.w3d.shipviewer.js"
+			],
+			"styles": [
+				"modules/specials/ext.w3d.shipviewer.css"
+			],
+			"dependencies": [
+				"ext.w3d.threejs",
+				"ext.w3d.ctm"
+			]
+		},
+		"ext.w3d.specials.colladaviewer": {
+			"scripts": [
+				"modules/threejs/controls/OrbitControls.js",
+				"modules/ext.w3d.viewloader.js",
+				"modules/specials/ext.w3d.colladaviewer.js"
+			],
+			"styles": [
+				"modules/viewer/ext.w3d.colladaviewer.css"
+			],
+			"dependencies": [
+				"ext.w3d.threejs",
+				"ext.w3d.collada"
+			]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "Wiki3D"
+	},
+	"SpecialPages": {
+		"ShipViewer": "SpecialShipViewer"
+	},
+	"manifest_version": 1
 }

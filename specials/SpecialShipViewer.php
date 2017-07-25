@@ -7,58 +7,56 @@
  */
 
 class SpecialShipViewer extends SpecialPage {
-    public function __construct() {
-        parent::__construct( 'ShipViewer' );
-    }
+	public function __construct() {
+		parent::__construct( 'ShipViewer' );
+	}
 
-    /**
-     * Show the page to the user
-     *
-     * @param string $sub The subpage string argument (if any).
-     *                    [[Special:HelloWorld/subpage]].
-     *
-     * @return void|string
-     */
-    public function execute( $sub ) {
-        $out = $this->getOutput();
-        $out->setPageTitle($this->msg('wiki3d-shipviewer'));
-        $jsConfig = Wiki3D::getBaseStructure();
+	/**
+	 * Show the page to the user
+	 *
+	 * @param string $sub The subpage string argument (if any).
+	 *                    [[Special:HelloWorld/subpage]].
+	 *
+	 * @return void|string
+	 */
+	public function execute( $sub ) {
+		$out = $this->getOutput();
+		$out->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
+		$jsConfig = Wiki3D::getBaseStructure();
 
-        $viewerConfig = Wiki3D::getDefaultCTMConfig();
+		$viewerConfig = Wiki3D::getDefaultCTMConfig();
 
-        $out->addModules([
-            'ext.w3d.threejs',
-            'ext.w3d.ctm',
-            'ext.w3d.viewer',
-            'ext.w3d.shipviewer',
-        ]);
+		$out->addModules( [
+				'ext.w3d.threejs',
+				'ext.w3d.ctm',
+				'ext.w3d.specials.shipviewer',
+			] );
 
+		$file = wfFindFile( $sub );
+		if ( $file === false || $file->getExtension() !== 'ctm' ) {
+			$out->addHTML( 'Only .ctm Files are supported' );
+		} else {
+			$viewerConfig['ctm']['path'] = $file->getFullUrl();
+			$viewerConfig['scene']['controls']['enable'] = true;
+			$viewerConfig['renderer']['resolution'] = 'fullHD';
+		}
 
+		$jsConfig['w3d']['ctm']['configs'][] = $viewerConfig;
 
-        $file = wfFindFile($sub);
-        if ($file === false || $file->getExtension() !== 'ctm') {
-            $out->addHTML('Only .ctm Files are supported');
-        } else {
-            $viewerConfig['ctm']['path'] = $file->getFullUrl();
-            $viewerConfig['scene']['controls']['enable'] = true;
-            $viewerConfig['renderer']['resolution'] = 'fullhd';
-        }
+		$out->addJsConfigVars( $jsConfig );
 
-        $jsConfig['w3d']['ctm']['configs'][] = $viewerConfig;
-
-        $out->addJsConfigVars($jsConfig);
-
-        $form = <<<EOF
+		$form = <<<EOT
 <div id="w3dWrapper">
-    <div class="controls">
+    <div class="controls" id="controls">
+    	<button id="toggleButton">&times;</button>
         <div class="form-group-wrapper">
             <p class="title">Ship</p>
             <div class="form-group">
-                <label for="shipColor">Ship Color</label>
+                <label for="shipColor">Color</label>
                 <input type="color" value="{$viewerConfig['materials']['color_hex_str']}" id="shipColor">
             </div>
             <div class="form-group">
-                <label for="shipMaterial">Ship Material</label>
+                <label for="shipMaterial">Material</label>
                 <select id="shipMaterial">
                     <option value="default">Default</option>
                     <option value="normal">Normal</option>
@@ -68,50 +66,50 @@ class SpecialShipViewer extends SpecialPage {
                 </select>
             </div>
             <div class="form-group">
-                <button id="shipWireframe">Toggle Wireframe</button>
+            	<label for="shipWireframe">Wireframe</label>
+                <button id="shipWireframe">Toggle</button>
             </div>
-        </div>
-        
-        <div class="form-group-wrapper">
-            <p class="title">Ship Rotation</p>
+
+            <p class="title">Rotation</p>
             <div class="form-group">
-                <label for="shipRotationX">Ship Rotation X-Axis</label>
+                <label for="shipRotationX">X-Axis</label>
                 <input type="number" name="shipRotationX" id="shipRotationX" value="0" step="0.05">
             </div>
             <div class="form-group">
-                <label for="shipRotationY">Ship Rotation Y-Axis</label>
+                <label for="shipRotationY">Y-Axis</label>
                 <input type="number" name="shipRotationY" id="shipRotationY" value="0" step="0.05">
             </div>
             <div class="form-group">
-                <label for="shipRotationZ">Ship Rotation Z-Axis</label>
+                <label for="shipRotationZ">Z-Axis</label>
                 <input type="number" name="shipRotationZ" id="shipRotationZ" value="0" step="0.05">
             </div>
             
-            <p class="title">Ship Position</p>
+            <p class="title">Position</p>
             <div class="form-group">
-                <label for="shipPositionX">Ship Position X-Axis</label>
+                <label for="shipPositionX">X-Axis</label>
                 <input type="number" name="shipPositionX" id="shipPositionX" value="0" step="5">
             </div>
             <div class="form-group">
-                <label for="shipPositionY">Ship Position Y-Axis</label>
+                <label for="shipPositionY">Y-Axis</label>
                 <input type="number" name="shipPositionY" id="shipPositionY" value="0" step="5">
             </div>
             <div class="form-group">
-                <label for="shipPositionZ">Ship Position Z-Axis</label>
+                <label for="shipPositionZ">Z-Axis</label>
                 <input type="number" name="shipPositionZ" id="shipPositionZ" value="0" step="5">
-            </div>            
+            </div>                  
         </div>
-        
+                
         <div class="form-group-wrapper">
             <p class="title">Camera</p>
             <div class="form-group">
                 <label for="cameraFOV">Camera FOV</label>
-                <input type="range" name="cameraFOV" id="cameraFOV" min="10" max="120" value="{$viewerConfig['camera']['fov']}">
+                <input type="range" class="w3d" name="cameraFOV" id="cameraFOV" min="10" max="120" 
+                value="{$viewerConfig['camera']['fov']}">
             </div>
         </div> 
         
         <div class="form-group-wrapper">
-            <p class="title">Scene</p>
+            <p class="title">Enviroment</p>
             <div class="form-group">
                 <label for="sceneScene">Scene Selection</label>
                 <select id="sceneScene">
@@ -121,7 +119,8 @@ class SpecialShipViewer extends SpecialPage {
                 </select>
             </div>
             <div class="form-group">
-                <button id="sceneDownload">Save Scene as Image</button>
+            	<label for="sceneDownload">Scene</label>
+                <button id="sceneDownload">Download</button>
             </div>
         </div> 
         
@@ -135,23 +134,19 @@ class SpecialShipViewer extends SpecialPage {
             <div class="form-group">
                 <label for="resolutionSelect">Resolution</label>
                 <select id="resolutionSelect">
-                    <option value="sd">SD</option>
-                    <option value="hd" selected>HD (720p)</option>
-                    <option value="fullhd">FullHD (1080p)</option>
-                    <option value="ultrahd_4k">UltraHD (4k)</option>
                 </select>
             </div>
         </div> 
     </div>
 </div>
-EOF;
+EOT;
 
-        $out->addHTML($form);
-    }
+		$out->addHTML( $form );
+	}
 
-    protected function getGroupName() {
-        return 'other';
-    }
+	protected function getGroupName() {
+		return 'other';
+	}
 }
 
 

@@ -10,14 +10,10 @@ $specialPageAliases = [];
 
 /** English (English) */
 $specialPageAliases['en'] = [
-    'ShipViewer' => ['ShipViewer'],
+	'ShipViewer' => [ 'ShipViewer' ],
 ];
 
 /** German (German) */
 $specialPageAliases['de'] = [
-    'ShipViewer' => ['ShipViewer'],
+	'ShipViewer' => [ 'ShipViewer' ],
 ];
-
-
-
-

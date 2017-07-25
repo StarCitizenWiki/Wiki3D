@@ -1,11 +1,11 @@
 /*jshint node:true */
-module.exports = function ( grunt ) {
-	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-	grunt.loadNpmTasks( 'grunt-jsonlint' );
-	grunt.loadNpmTasks( 'grunt-banana-checker' );
-	grunt.loadNpmTasks( 'grunt-jscs' );
+module.exports = function (grunt) {
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-jsonlint');
+	grunt.loadNpmTasks('grunt-banana-checker');
+	grunt.loadNpmTasks('grunt-jscs');
 
-	grunt.initConfig( {
+	grunt.initConfig({
 		jshint: {
 			options: {
 				jshintrc: true
@@ -28,8 +28,8 @@ module.exports = function ( grunt ) {
 				'!vendor/**'
 			]
 		}
-	} );
+	});
 
-	grunt.registerTask( 'test', [ 'jshint', 'jscs', 'jsonlint', 'banana' ] );
-	grunt.registerTask( 'default', 'test' );
+	grunt.registerTask('test', ['jshint', 'jscs', 'jsonlint', 'banana']);
+	grunt.registerTask('default', 'test');
 };

@@ -9,10 +9,8 @@
 	"undef": true,
 	"unused": true,
 	"strict": false,
-
 	// Environment
 	"browser": true,
-
 	"globals": {
 		"mw": false,
 		"$": false

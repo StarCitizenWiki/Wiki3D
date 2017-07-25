@@ -1,4 +1,7 @@
 {
 	"preset": "wikimedia",
-	"excludeFiles": [ "node_modules/**", "vendor/**" ]
+	"excludeFiles": [
+		"node_modules/**",
+		"vendor/**"
+	]
 }
