@@ -3,11 +3,11 @@
 	const POSITIONS = [ 'x', 'y', 'z' ], SHIP_POSITION_TYPES = [ 'position', 'rotation' ];
 
 	/**
-	 * @class mw.w3d.CTMViewer
+	 * @class mw.w3d.CtmViewer
 	 *
 	 * @constructor
 	 */
-	function CTMViewer( config ) {
+	function CtmViewer( config ) {
 		let ctmObject,
 			sceneObject,
 			renderObject,
@@ -30,7 +30,7 @@
 			createCamera();
 			createRenderer();
 			createControls();
-			loadCTMObject();
+			loadCtmObject();
 		}
 
 		function createScene() {
@@ -59,7 +59,7 @@
 			let renderer;
 
 			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
-			renderer.setClearColor( config.renderer.clear_color.color, config.renderer.clear_color.opacity );
+			renderer.setClearColor( config.renderer.clearColor, config.renderer.opacity );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize(
 				mw.w3d.getResolution( config.renderer.resolution ).width,
@@ -72,43 +72,47 @@
 		function createControls() {
 			let controls;
 
+			if ( !config.scene.controls.enable ) {
+				return;
+			}
+
 			controls = new THREE.OrbitControls( cameraObject, renderObject.domElement );
-			controls.enableZoom = config.scene.controls.enable_zoom;
-			controls.enableKeys = config.scene.controls.enable_keys;
-			controls.enablePan = config.scene.controls.enable_pan;
-			controls.enableRotate = config.scene.controls.enable_rotate;
-			controls.enableDamping = config.scene.controls.enable_damping;
-			controls.dampingFactor = config.scene.controls.damping_factor;
-			controls.zoomSpeed = config.scene.controls.zoom_speed;
-			controls.rotateSpeed = config.scene.controls.rotate_speed;
-			controls.panSpeed = config.scene.controls.pan_speed;
-			controls.minDistance = config.scene.controls.min_distance;
-			controls.maxDistance = config.scene.controls.max_distance;
+			controls.enableZoom = config.scene.controls.enableZoom;
+			controls.enableKeys = config.scene.controls.enableKeys;
+			controls.enablePan = config.scene.controls.enablePan;
+			controls.enableRotate = config.scene.controls.enableRotate;
+			controls.enableDamping = config.scene.controls.enableDamping;
+			controls.dampingFactor = config.scene.controls.dampingFactor;
+			controls.zoomSpeed = config.scene.controls.zoomSpeed;
+			controls.rotateSpeed = config.scene.controls.rotateSpeed;
+			controls.panSpeed = config.scene.controls.panSpeed;
+			controls.minDistance = config.scene.controls.minDistance;
+			controls.maxDistance = config.scene.controls.maxDistance;
 
 			controlsObject = controls;
 		}
 
-		function loadCTMObject() {
+		function loadCtmObject() {
 			let ctmLoader;
 
 			ctmLoader = new THREE.CTMLoader();
 
 			if ( config.ctm.path !== '' ) {
-				ctmLoader.load( config.ctm.path, createCTMMesh, {
+				ctmLoader.load( config.ctm.path, createCtmMesh, {
 					useWorker: true,
 					worker: new Worker( mw.config.get( 'wgExtensionAssetsPath' ) + '/Wiki3D/modules/threejs/ctm/CTMWorker.js' )
 				} );
 			}
 
-			function createCTMMesh( geometry ) {
+			function createCtmMesh( geometry ) {
 				ctmObject = new THREE.Mesh(
 					geometry,
 					materials[ config.materials.current ]
 				);
-				configureCTMObject();
+				configureCtmObject();
 			}
 
-			function configureCTMObject() {
+			function configureCtmObject() {
 				ctmObject.position.set( 0, 0, 0 );
 				ctmObject.castShadow = true;
 				ctmObject.receiveShadow = true;
@@ -121,11 +125,23 @@
 					config.ctm.rotation.z
 				);
 				ctmObject.material.color.setHex( config.materials.color );
+
+				normalizeCtmSize();
+			}
+
+			function normalizeCtmSize() {
+				let box, scale;
+
+				box = new THREE.Box3().setFromObject( ctmObject );
+				scale = box.getSize().x / config.ctm.defaultSize;
+				scale = 1 / scale;
+				ctmObject.scale.set( scale, scale, scale );
+
 				start();
 			}
 		}
 
-		function updateCTMColor() {
+		function updateCtmColor() {
 			if ( typeof ctmObject.material.color !== 'undefined' ) {
 				ctmObject.material.color.setHex( config.materials.color );
 			}
@@ -133,7 +149,6 @@
 
 		function start() {
 			assembleScene();
-			configureCamera();
 			addRenderElement();
 			animate();
 		}
@@ -142,13 +157,6 @@
 			sceneObject.add( ctmObject );
 			sceneObject.add( sceneGroups[ config.scene.current ] );
 			sceneObject.userData.lightList = sceneGroups[ config.scene.current ].userData.lightList;
-		}
-
-		function configureCamera() {
-			let box;
-
-			box = new THREE.Box3().setFromObject( ctmObject );
-			cameraObject.position.z = box.getSize().x + config.scene.camera.position.z;
 		}
 
 		function addRenderElement() {
@@ -163,6 +171,7 @@
 			if ( config.scene.controls.enable ) {
 				controlsObject.update();
 			}
+			ctmObject.rotation.y = ctmObject.rotation.y + 0.01;
 			renderObject.render( sceneObject, cameraObject );
 		}
 
@@ -170,7 +179,7 @@
 		Public Methods
 		 */
 		this.getLightList = function () {
-			return sceneGroups[ config.scene.current ];
+			return sceneGroups[ config.scene.current ].userData.lightList;
 		};
 
 		this.toggleWireFrame = function () {
@@ -197,7 +206,7 @@
 
 		this.changeShipColor = function ( hexColor ) {
 			config.materials.color = hexColor;
-			updateCTMColor();
+			updateCtmColor();
 		};
 
 		this.changeScene = function ( sceneName ) {
@@ -242,5 +251,5 @@
 		};
 	}
 
-	mw.w3d.CTMViewer = CTMViewer;
+	mw.w3d.CtmViewer = CtmViewer;
 }() );

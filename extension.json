@@ -17,7 +17,8 @@
 		"Wiki3DEnableFoo": true
 	},
 	"ExtensionMessagesFiles": {
-		"Wiki3DAlias": "Wiki3D.i18n.alias.php"
+		"Wiki3DAlias": "Wiki3D.i18n.alias.php",
+		"Wiki3DMagic": "Wiki3D.i18n.magic.php"
 	},
 	"Hooks": {
 		"ParserFirstCallInit": [
@@ -33,12 +34,13 @@
 		"ext.w3d.threejs": {
 			"scripts": [
 				"modules/threejs/three.js",
-				"modules/threejs/libs/Detector.js",
+				"modules/threejs/controls/OrbitControls.js",
 				"modules/ext.w3d.js"
 			]
 		},
 		"ext.w3d.ctm": {
 			"scripts": [
+				"modules/threejs/libs/Detector.js",
 				"modules/threejs/ctm/lzma.js",
 				"modules/threejs/ctm/ctm.js",
 				"modules/threejs/ctm/CTMLoader.js",
@@ -59,7 +61,6 @@
 		},
 		"ext.w3d.specials.shipviewer": {
 			"scripts": [
-				"modules/threejs/controls/OrbitControls.js",
 				"modules/viewer/ext.w3d.viewloader.js",
 				"modules/specials/ext.w3d.shipviewer.js"
 			],
@@ -83,6 +84,15 @@
 			"dependencies": [
 				"ext.w3d.threejs",
 				"ext.w3d.collada"
+			]
+		},
+		"ext.w3d.viewloader": {
+			"scripts": [
+				"modules/viewer/ext.w3d.viewloader.js"
+			],
+			"dependencies": [
+				"ext.w3d.threejs",
+				"ext.w3d.ctm"
 			]
 		}
 	},

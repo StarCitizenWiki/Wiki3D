@@ -7,8 +7,16 @@
  */
 
 class SpecialShipViewer extends SpecialPage {
+
+	private $subPage;
+	private $viewerConfig;
+
 	public function __construct() {
 		parent::__construct( 'ShipViewer' );
+
+		$this->getOutput()->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
+
+		$this->viewerConfig = Wiki3D::getBaseStructure();
 	}
 
 	/**
@@ -20,32 +28,47 @@ class SpecialShipViewer extends SpecialPage {
 	 * @return void|string
 	 */
 	public function execute( $sub ) {
-		$out = $this->getOutput();
-		$out->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
-		$jsConfig = Wiki3D::getBaseStructure();
+		$this->subPage = $sub;
 
-		$viewerConfig = Wiki3D::getDefaultCTMConfig();
+		try {
+			$this->makeConfig();
+			$this->addViewerModulesToPage();
+		}
+		catch ( InvalidArgumentException $e ) {
+			$this->addValidLinksList();
+		}
+	}
+
+	private function makeConfig() {
+		$defaultCtmConfig = Wiki3D::getDefaultCtmConfig();
+
+		$file = wfFindFile( $this->subPage );
+		if ( $file === false || $file->getExtension() !== 'ctm' ) {
+			throw new InvalidArgumentException();
+		} else {
+			$defaultCtmConfig['ctm']['path'] = $file->getFullUrl();
+			$defaultCtmConfig['scene']['controls']['enable'] = true;
+			$defaultCtmConfig['renderer']['resolution'] = 'fullHD';
+			$this->viewerConfig['w3d']['ctm']['configs'][] = $defaultCtmConfig;
+		}
+	}
+
+	private function addViewerModulesToPage() {
+		$out = $this->getOutput();
 
 		$out->addModules( [
-				'ext.w3d.threejs',
-				'ext.w3d.ctm',
-				'ext.w3d.specials.shipviewer',
-			] );
+			'ext.w3d.threejs',
+			'ext.w3d.ctm',
+			'ext.w3d.specials.shipviewer',
+		] );
 
-		$file = wfFindFile( $sub );
-		if ( $file === false || $file->getExtension() !== 'ctm' ) {
-			$out->addHTML( 'Only .ctm Files are supported' );
-		} else {
-			$viewerConfig['ctm']['path'] = $file->getFullUrl();
-			$viewerConfig['scene']['controls']['enable'] = true;
-			$viewerConfig['renderer']['resolution'] = 'fullHD';
-		}
+		$out->addJsConfigVars( $this->viewerConfig );
 
-		$jsConfig['w3d']['ctm']['configs'][] = $viewerConfig;
+		$out->addHTML( $this->getControlsHtml() );
+	}
 
-		$out->addJsConfigVars( $jsConfig );
-
-		$form = <<<EOT
+	private function getControlsHtml() {
+		return <<<EOT
 <div id="w3dWrapper">
     <div class="controls" id="controls">
     	<button id="toggleButton">&times;</button>
@@ -53,7 +76,8 @@ class SpecialShipViewer extends SpecialPage {
             <p class="title">Ship</p>
             <div class="form-group">
                 <label for="shipColor">Color</label>
-                <input type="color" value="{$viewerConfig['materials']['color_hex_str']}" id="shipColor">
+                <input type="color" value="{$this->viewerConfig['w3d']['ctm']['configs'][0]['materials']['colorHexStr']}" 
+                id="shipColor">
             </div>
             <div class="form-group">
                 <label for="shipMaterial">Material</label>
@@ -104,7 +128,7 @@ class SpecialShipViewer extends SpecialPage {
             <div class="form-group">
                 <label for="cameraFOV">Camera FOV</label>
                 <input type="range" class="w3d" name="cameraFOV" id="cameraFOV" min="10" max="120" 
-                value="{$viewerConfig['camera']['fov']}">
+                value="{$this->viewerConfig['w3d']['ctm']['configs'][0]['scene']['camera']['fov']}">
             </div>
         </div> 
         
@@ -140,8 +164,28 @@ class SpecialShipViewer extends SpecialPage {
     </div>
 </div>
 EOT;
+	}
 
-		$out->addHTML( $form );
+	private function addValidLinksList() {
+		$dbSearchType = SearchEngineFactory::getSearchEngineClass( wfGetDB( DB_REPLICA ) );
+		$dbSearch = new $dbSearchType();
+
+		$dbSearch->setNamespaces( NS_FILE );
+		$sr = $dbSearch->searchTitle( '.ctm' );
+
+		try {
+			$titles = $sr->extractTitles();
+		}
+		catch ( Exception $e ) {
+			$titles = [];
+		}
+
+		foreach ( $titles as $title ) {
+			$titleText = $title->getTitleValue()->getText();
+
+			$this->getOutput()
+				->addHTML( "<a href='{$this->getFullTitle()->getCanonicalURL()}/{$titleText}'>{$titleText}</a><br>" );
+		}
 	}
 
 	protected function getGroupName() {

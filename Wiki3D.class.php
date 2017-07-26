@@ -6,8 +6,72 @@
  */
 
 class Wiki3D {
-	public static function generateCTM( $input, array $args, Parser $parser, PPFrame $frames ) {
-		return json_encode($args);
+	public static function createCtmViewer( Parser &$parser, PPFrame $frame, $args ) {
+		$parsed = [];
+		for ( $i = 0; $i < count( $args ); $i ++ ) {
+			$parsed[] = $frame->expand( $args[$i] );
+		}
+		array_shift( $parsed );
+		$parsed = self::extractOptions( $parsed );
+
+		$base = Wiki3D::getBaseStructure();
+		$defaultCtmConfig = Wiki3D::getDefaultCtmConfig();
+
+		$file = wfFindFile( $parsed['file'] );
+		if ( $file === false || $file->getExtension() !== 'ctm' ) {
+			throw new InvalidArgumentException();
+		} else {
+			$defaultCtmConfig['ctm']['path'] = $file->getFullUrl();
+			$defaultCtmConfig['renderer']['resolution'] = 'sd';
+			$defaultCtmConfig['renderer']['parent'] = 'mw-content-text';
+			$defaultCtmConfig['scene']['controls']['enable'] = $parsed['controls'] ?? false;
+			$base['w3d']['ctm']['configs'][] = $defaultCtmConfig;
+			$out = $parser->getOutput();
+
+			$out->addModules( [
+				'ext.w3d.threejs',
+				'ext.w3d.ctm',
+				'ext.w3d.viewloader',
+			] );
+
+			if ( !is_null( $out->mJsConfigVars['w3d'] ) &&
+			     is_array( $out->mJsConfigVars['w3d']['ctm']['configs'] ) &&
+			     count( $out->mJsConfigVars['w3d']['ctm']['configs'] ) > 0 ) {
+				$out->mJsConfigVars['w3d']['ctm']['configs'][] = $defaultCtmConfig;
+			} else {
+				$out->addJsConfigVars( $base );
+			}
+
+		}
+	}
+
+	/**
+	 * Converts an array of values in form [0] => 'name=value' into a real
+	 * associative array in form [name] => value. If no = is provided,
+	 * true is assumed like this: [name] => true
+	 *
+	 * @param array|string $options
+	 *
+	 * @return array $results
+	 */
+	private static function extractOptions( array $options ) {
+		$results = [];
+
+		foreach ( $options as $option ) {
+			$pair = explode( '=', $option, 2 );
+			if ( count( $pair ) === 2 ) {
+				$name = trim( $pair[0] );
+				$value = trim( $pair[1] );
+				$results[$name] = $value;
+			}
+
+			if ( count( $pair ) === 1 ) {
+				$name = trim( $pair[0] );
+				$results[$name] = true;
+			}
+		}
+
+		return $results;
 	}
 
 	public static function getBaseStructure() {
@@ -19,17 +83,18 @@ class Wiki3D {
 				],
 				'collada' => [
 					'configs' => [],
-					'viewsers' => [],
+					'viewers' => [],
 				],
 			],
 		];
 	}
 
-	public static function getDefaultCTMConfig() {
+	public static function getDefaultCtmConfig() {
 		return [
 			'ctm' => [
 				'path' => '',
 				'scale' => 1,
+				'defaultSize' => 500,
 				'rotation' => [
 					'x' => 0,
 					'y' => M_PI_2,
@@ -43,7 +108,7 @@ class Wiki3D {
 			],
 			'materials' => [
 				'color' => 0x32c6ff,
-				'color_hex_str' => '#32c6ff',
+				'colorHexStr' => '#32c6ff',
 				'current' => 'default',
 			],
 			'scene' => [
@@ -56,28 +121,28 @@ class Wiki3D {
 					'position' => [
 						'x' => 0,
 						'y' => 0,
-						'z' => 0,
+						'z' => 500,
 					],
 				],
 				'controls' => [
 					'enable' => false,
-					'enable_zoom' => true,
-					'enable_keys' => false,
-					'enable_pan' => true,
-					'enable_rotate' => true,
-					'enable_damping' => true,
-					'damping_factor' => 0.25,
-					'zoom_speed' => 1,
-					'rotate_speed' => 0.05,
-					'pan_speed' => 2,
-					'min_distance' => 1,
-					'max_distance' => 10000,
+					'enableZoom' => true,
+					'enableKeys' => false,
+					'enablePan' => true,
+					'enableRotate' => true,
+					'enableDamping' => true,
+					'dampingFactor' => 0.25,
+					'zoomSpeed' => 1,
+					'rotateSpeed' => 0.05,
+					'panSpeed' => 2,
+					'minDistance' => 1,
+					'maxDistance' => 5000,
 				],
 			],
 			'renderer' => [
 				'parent' => 'w3dWrapper',
 				'resolution' => 'hd',
-				'clear_color' => 0x000000,
+				'clearColor' => 0x000000,
 				'opacity' => 0,
 			],
 		];
