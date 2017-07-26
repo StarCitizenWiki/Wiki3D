@@ -6,11 +6,11 @@
  * @ingroup Extensions
  */
 
-class SpecialShipViewer extends SpecialPage {
+class SpecialColladaViewer extends SpecialPage {
 	private $config;
 
 	public function __construct() {
-		parent::__construct( 'ShipViewer' );
+		parent::__construct( 'StationViewer' );
 
 		$this->getOutput()->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
 	}
@@ -38,8 +38,8 @@ class SpecialShipViewer extends SpecialPage {
 				$this->config = $ctmBuilder->getConfig();
 				$ctmBuilder->setModules( [
 					'ext.w3d.threejs',
-					'ext.w3d.ctm',
-					'ext.w3d.specials.shipviewer',
+					'ext.w3d.collada',
+					'ext.w3d.specials.colladaviewer',
 				] );
 				$ctmBuilder->addToOutput();
 				$this->getOutput()->addHTML( $this->getControlsHtml() );
@@ -61,25 +61,6 @@ class SpecialShipViewer extends SpecialPage {
     	<button id="toggleButton">&times;</button>
         <div class="form-group-wrapper">
             <p class="title">Ship</p>
-            <div class="form-group">
-                <label for="shipColor">Color</label>
-                <input type="color" value="{$this->config['material']['colorHexStr']}" 
-                id="shipColor">
-            </div>
-            <div class="form-group">
-                <label for="shipMaterial">Material</label>
-                <select id="shipMaterial">
-                    <option value="default">Default</option>
-                    <option value="normal">Normal</option>
-                    <option value="rgb">RGB</option>
-                    <option value="shiny">Shiny</option>
-                    <option value="flat">Basic</option>
-                </select>
-            </div>
-            <div class="form-group">
-            	<label for="shipWireframe">Wireframe</label>
-                <button id="shipWireframe" class="green">Toggle</button>
-            </div>
 
             <p class="title">Rotation</p>
             <div class="form-group">
@@ -158,7 +139,7 @@ EOT;
 		$dbSearch = new $dbSearchType();
 
 		$dbSearch->setNamespaces( NS_FILE );
-		$sr = $dbSearch->searchTitle( '.ctm' );
+		$sr = $dbSearch->searchTitle( '.dae' );
 
 		try {
 			$titles = $sr->extractTitles();

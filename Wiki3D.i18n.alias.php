@@ -11,9 +11,5 @@ $specialPageAliases = [];
 /** English (English) */
 $specialPageAliases['en'] = [
 	'ShipViewer' => [ 'ShipViewer' ],
-];
-
-/** German (German) */
-$specialPageAliases['de'] = [
-	'ShipViewer' => [ 'ShipViewer' ],
+	'StationViewer' => [ 'StationViewer' ],
 ];

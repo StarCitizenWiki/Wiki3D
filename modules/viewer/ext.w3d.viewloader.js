@@ -3,8 +3,8 @@ $( function () {
 	let w3dConfig = mw.config.get( 'w3d' );
 	if ( w3dConfig !== null ) {
 		if ( 'ctm' in w3dConfig ) {
-			for ( let id in w3dConfig[ 'ctm' ][ 'configs' ] ) {
-				w3dConfig[ 'ctm' ][ 'viewers' ].push( new mw.w3d.CtmViewer( w3dConfig[ 'ctm' ][ 'configs' ][ id ] ) );
+			for ( let i = 0; i < w3dConfig[ 'ctm' ][ 'configs' ].length; i++ ) {
+				w3dConfig[ 'ctm' ][ 'viewers' ].push( new mw.w3d.CtmViewer( w3dConfig[ 'ctm' ][ 'configs' ][ i ] ) );
 			}
 		}
 		if ( 'collada' in w3dConfig ) {

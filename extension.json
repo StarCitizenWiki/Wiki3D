@@ -11,7 +11,11 @@
 	"AutoloadClasses": {
 		"Wiki3DHooks": "Wiki3D.hooks.php",
 		"Wiki3D": "Wiki3D.class.php",
-		"SpecialShipViewer": "specials/SpecialShipViewer.php"
+		"Wiki3DBuilder": "classes/Wiki3DBuilder.php",
+		"Wiki3DBuilderCtm": "classes/Wiki3DBuilderCTM.php",
+		"Wiki3DBuilderCollada": "classes/Wiki3DBuilderCollada.php",
+		"SpecialShipViewer": "specials/SpecialShipViewer.php",
+		"SpecialColladaViewer": "specials/SpecialColladaViewer.php"
 	},
 	"config": {
 		"Wiki3DEnableFoo": true
@@ -35,12 +39,12 @@
 			"scripts": [
 				"modules/threejs/three.js",
 				"modules/threejs/controls/OrbitControls.js",
+				"modules/threejs/libs/Detector.js",
 				"modules/ext.w3d.js"
 			]
 		},
 		"ext.w3d.ctm": {
 			"scripts": [
-				"modules/threejs/libs/Detector.js",
 				"modules/threejs/ctm/lzma.js",
 				"modules/threejs/ctm/ctm.js",
 				"modules/threejs/ctm/CTMLoader.js",
@@ -74,12 +78,11 @@
 		},
 		"ext.w3d.specials.colladaviewer": {
 			"scripts": [
-				"modules/threejs/controls/OrbitControls.js",
-				"modules/ext.w3d.viewloader.js",
+				"modules/viewer/ext.w3d.viewloader.js",
 				"modules/specials/ext.w3d.colladaviewer.js"
 			],
 			"styles": [
-				"modules/viewer/ext.w3d.colladaviewer.css"
+				"modules/specials/ext.w3d.shipviewer.css"
 			],
 			"dependencies": [
 				"ext.w3d.threejs",
@@ -88,11 +91,13 @@
 		},
 		"ext.w3d.viewloader": {
 			"scripts": [
-				"modules/viewer/ext.w3d.viewloader.js"
+				"modules/viewer/ext.w3d.viewloader.js",
+				"modules/specials/ext.w3d.colladaviewer.js"
 			],
 			"dependencies": [
 				"ext.w3d.threejs",
-				"ext.w3d.ctm"
+				"ext.w3d.ctm",
+				"ext.w3d.collada"
 			]
 		}
 	},
@@ -101,7 +106,8 @@
 		"remoteExtPath": "Wiki3D"
 	},
 	"SpecialPages": {
-		"ShipViewer": "SpecialShipViewer"
+		"ShipViewer": "SpecialShipViewer",
+		"StationViewer": "SpecialColladaViewer"
 	},
 	"manifest_version": 1
 }

@@ -200,7 +200,9 @@
 				height: 2160,
 				aspect: 16 / 9
 			}
-		};
+		},
+		POSITIONS = [ 'x', 'y', 'z' ],
+		POSITION_TYPES = [ 'position', 'rotation' ];
 
 	function lightFactory( type, config ) {
 		switch ( type ) {

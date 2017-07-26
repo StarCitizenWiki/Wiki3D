@@ -60,7 +60,7 @@
 }
 
 #w3dWrapper .form-group-wrapper label {
-    min-width: 100px;
+    min-width: 110px;
     margin-right: 10px;
     display: inline-block;
 }
@@ -76,8 +76,22 @@
     padding: 3px 5px;
     margin: 0;
     background: transparent;
-    border: 1px solid;
+    border: 1px solid #000;
     border-radius: 5px;
+}
+
+.form-group-wrapper button.green {
+    color: #000;
+    background-color: lightgreen;
+}
+
+.form-group-wrapper button.red {
+    color: #fff;
+    background-color: lightcoral;
+}
+
+.form-group-wrapper button.blue {
+    background-color: lightblue;
 }
 
 .form-group-wrapper select {

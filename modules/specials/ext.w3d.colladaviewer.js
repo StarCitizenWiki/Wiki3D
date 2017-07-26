@@ -1,9 +1,9 @@
 'use strict';
 $( function () {
-	let ctmViewer;
+	let colladaViewer;
 
 	if ( mw.config.get( 'w3d' ) !== null ) {
-		ctmViewer = mw.config.get( 'w3d' ).ctm.viewers[ 0 ];
+		colladaViewer = mw.config.get( 'w3d' ).collada.viewers[ 0 ];
 		addEventListener();
 		addLightList();
 		addRenderResolutions();
@@ -20,19 +20,7 @@ $( function () {
 				controls.classList.add( 'visible' );
 			}
 		} );
-		document.getElementById( 'shipWireframe' ).addEventListener( 'click', function ( event ) {
-			let target;
 
-			target = event.target;
-			if ( target.className.indexOf( 'red' ) > -1 ) {
-				target.classList.remove( 'red' );
-				target.classList.add( 'green' );
-			} else {
-				target.classList.add( 'red' );
-				target.classList.remove( 'green' );
-			}
-			ctmViewer.toggleWireFrame();
-		} );
 		document.getElementById( 'shipRotationX' ).addEventListener( 'input', changeRotation );
 		document.getElementById( 'shipRotationY' ).addEventListener( 'input', changeRotation );
 		document.getElementById( 'shipRotationZ' ).addEventListener( 'input', changeRotation );
@@ -40,13 +28,6 @@ $( function () {
 		document.getElementById( 'shipPositionY' ).addEventListener( 'input', changePosition );
 		document.getElementById( 'shipPositionZ' ).addEventListener( 'input', changePosition );
 
-		document.getElementById( 'shipColor' ).addEventListener( 'change', function ( event ) {
-			let color;
-
-			color = event.target.value;
-			color = color.replace( '#', '0x' );
-			ctmViewer.changeShipColor( color );
-		} );
 
 		document.getElementById( 'sceneScene' ).addEventListener( 'change', function ( event ) {
 			let select, selected;
@@ -54,21 +35,12 @@ $( function () {
 			select = event.target;
 			selected = select.options[ select.selectedIndex ].value;
 
-			ctmViewer.changeScene( selected );
+			colladaViewer.changeScene( selected );
 			addLightList();
 		} );
 
-		document.getElementById( 'shipMaterial' ).addEventListener( 'change', function ( event ) {
-			let select, selected;
-
-			select = event.target;
-			selected = select.options[ select.selectedIndex ].value;
-
-			ctmViewer.changeMaterial( selected );
-		} );
-
 		document.getElementById( 'cameraFOV' ).addEventListener( 'input', function ( event ) {
-			ctmViewer.changeCameraFOV( event.target.value );
+			colladaViewer.changeCameraFOV( event.target.value );
 		} );
 
 		document.getElementById( 'resolutionSelect' ).addEventListener( 'input', function ( event ) {
@@ -77,11 +49,11 @@ $( function () {
 			select = event.target;
 			selected = select.options[ select.selectedIndex ].value;
 
-			ctmViewer.changeRenderResolution( selected );
+			colladaViewer.changeRenderResolution( selected );
 		} );
 
 		document.getElementById( 'sceneDownload' ).addEventListener( 'click', function () {
-			ctmViewer.downloadImage();
+			colladaViewer.downloadImage();
 		} );
 
 	}
@@ -108,7 +80,7 @@ $( function () {
 			default:
 				break;
 		}
-		ctmViewer.updateShip( 'rotation', update );
+		colladaViewer.updateShip( 'rotation', update );
 	}
 
 	function changePosition( event ) {
@@ -133,7 +105,7 @@ $( function () {
 			default:
 				break;
 		}
-		ctmViewer.updateShip( 'position', update );
+		colladaViewer.updateShip( 'position', update );
 	}
 
 	function addLightList() {
@@ -142,7 +114,7 @@ $( function () {
 		listElement = document.getElementById( 'lightList' );
 		listElement.innerHTML = '';
 
-		lightList = ctmViewer.getLightList();
+		lightList = colladaViewer.getLightList();
 
 		for ( let i = 0; i < lightList.length; i++ ) {
 			let html;
@@ -161,7 +133,7 @@ $( function () {
 
 		renderResolutionList = mw.w3d.getResolutions();
 		listElement = document.getElementById( 'resolutionSelect' );
-		currentResolution = mw.config.get( 'w3d' ).ctm.configs[ 0 ].renderer.resolution;
+		currentResolution = mw.config.get( 'w3d' ).collada.configs[ 0 ].renderer.resolution;
 
 		for ( let name in renderResolutionList ) {
 			let optionElement;
@@ -189,7 +161,7 @@ $( function () {
 			target.classList.remove( 'green' );
 		}
 
-		ctmViewer.toggleLight( event.target.id );
+		colladaViewer.toggleLight( event.target.id );
 	}
 
 } );
