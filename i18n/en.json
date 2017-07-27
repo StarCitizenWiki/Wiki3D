@@ -4,10 +4,13 @@
 			"FoXFTW"
 		]
 	},
+	"shipviewer": "Ship Viewer",
+	"stationviewer": "Station Viewer",
 	"wiki3d-desc": "Interact with 3D Files",
 	"wiki3d-shipviewer": "{{SITENAME}} Ship Viewer",
 	"wiki3d-stationviewer": "{{SITENAME}} Station Viewer",
 	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
 	"wiki3d-fileOptionMissing": "File-Option is missing",
-	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed"
+	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed",
+	"specialpages-group-wiki3d": "Wiki3D"
 }

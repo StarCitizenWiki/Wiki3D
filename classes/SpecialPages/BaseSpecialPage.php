@@ -89,7 +89,6 @@ abstract class BaseSpecialPage extends SpecialPage {
 
 		foreach ( $titles as $title ) {
 			$titleText = $title->getTitleValue()->getText();
-
 			$this->getOutput()
 				->addHTML( "<a href='{$this->getFullTitle()->getCanonicalURL()}/{$titleText}'>{$titleText}</a><br>" );
 		}
@@ -97,18 +96,21 @@ abstract class BaseSpecialPage extends SpecialPage {
 
 	private function searchDB() {
 		$dbSearch = SearchEngineFactory::getSearchEngineClass( wfGetDB( DB_REPLICA ) );
+
 		/** @var SearchEngine $dbSearch */
 		$dbSearch = new $dbSearch();
 
 		$dbSearch->setNamespaces( [ NS_FILE ] );
 
-		return $dbSearch->searchTitle( $this->getFileExtensionToSearch() );
+		$result = $dbSearch->searchTitle( $this->getFileExtensionToSearch() );
+
+		return $result;
 	}
 
 	protected function getFileExtensionToSearch() {
 	}
 
 	protected function getGroupName() {
-		return 'other';
+		return 'wiki3d';
 	}
 }
