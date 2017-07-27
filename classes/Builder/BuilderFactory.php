@@ -13,7 +13,7 @@ class BuilderFactory {
 	public static function getBuilder( $className ) {
 		switch ( $className ) {
 			case 'ctm':
-				return 'Wiki3D\Builder\ShapeBuilder';
+				return 'Wiki3D\Builder\CtmBuilder';
 				break;
 
 			case 'collada':

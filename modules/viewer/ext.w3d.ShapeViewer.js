@@ -89,7 +89,7 @@
 
 			controlsObject = controls;
 
-			renderObject.domElement.classList.add( 'controls' );
+			renderObject.domElement.classList.add( 'has-controls' );
 		}
 
 		function loadMainObject() {

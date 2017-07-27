@@ -100,7 +100,7 @@
 
 			controlsObject = controls;
 
-			renderObject.domElement.classList.add( 'controls' );
+			renderObject.domElement.classList.add( 'has-controls' );
 		}
 
 		function loadMainObject() {
@@ -151,7 +151,7 @@
 				let box, scale;
 
 				box = new THREE.Box3().setFromObject( mainObject );
-				scale = box.getSize().x / config.mainObject.defaultSize;
+				scale = box.getSize().z / config.mainObject.defaultSize;
 				scale = 1 / scale;
 				mainObject.scale.set( scale, scale, scale );
 

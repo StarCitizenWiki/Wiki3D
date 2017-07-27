@@ -44,14 +44,14 @@ class Wiki3DConfig {
 		return [
 			'mainObject' => [
 				'scale' => 1,
-				'defaultSize' => 500,
+				'defaultSize' => 400,
 				'rotation' => [
 					'x' => 0,
 					'y' => M_PI_2,
 					'z' => 0,
 					'speed' => [
 						'x' => 0,
-						'y' => 25,
+						'y' => 0,
 						'z' => 0,
 					],
 				],
@@ -71,7 +71,7 @@ class Wiki3DConfig {
 				'position' => [
 					'x' => 0,
 					'y' => 0,
-					'z' => 500,
+					'z' => 400,
 				],
 			],
 			'controls' => [
@@ -83,7 +83,7 @@ class Wiki3DConfig {
 				'enableDamping' => true,
 				'dampingFactor' => 0.25,
 				'zoomSpeed' => 1,
-				'rotateSpeed' => 0.05,
+				'rotateSpeed' => 0.1,
 				'panSpeed' => 2,
 				'minDistance' => 1,
 				'maxDistance' => 5000,
@@ -98,7 +98,11 @@ class Wiki3DConfig {
 	}
 
 	public static function getDefaultColladaConfig() {
-		return self::getDefaultConfig();
+		$config = self::getDefaultConfig();
+
+		$config['camera']['position']['y'] = 25;
+
+		return $config;
 	}
 
 	public static function getDefaultShapeConfig() {

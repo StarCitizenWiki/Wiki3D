@@ -76,7 +76,7 @@
 						position: { x: 0, y: -1, z: 0 }
 					}
 				]
-			},
+			}/*,
 			{
 				name: 'space',
 				meshes: [
@@ -183,7 +183,7 @@
 						position: { x: 1, y: 0, z: 0 }
 					}
 				]
-			}
+			}*/
 		],
 		RESOLUTIONS = {
 			square500: {
@@ -499,6 +499,9 @@
 		},
 		getResolution: function ( name ) {
 			return RESOLUTIONS[ name ];
+		},
+		getScenes: function () {
+			return SCENES;
 		}
 	};
 }() );

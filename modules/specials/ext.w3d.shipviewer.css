@@ -6,8 +6,9 @@
 }
 
 #w3dWrapper progress {
-    width: 100%;
-    height: 50px;
+    width: 200px;
+    display: block;
+    margin: 150px auto 0;
 }
 
 #w3dWrapper .controls {

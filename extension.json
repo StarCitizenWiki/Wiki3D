@@ -50,6 +50,10 @@
 			],
 			"styles": [
 				"modules/ext.w3d.css"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.ctm": {
@@ -62,6 +66,10 @@
 			],
 			"dependencies": [
 				"ext.w3d.threejs"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.collada": {
@@ -72,6 +80,10 @@
 			],
 			"dependencies": [
 				"ext.w3d.threejs"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.shape": {
@@ -81,6 +93,10 @@
 			],
 			"dependencies": [
 				"ext.w3d.threejs"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.specials.shipviewer": {
@@ -94,6 +110,10 @@
 			"dependencies": [
 				"ext.w3d.threejs",
 				"ext.w3d.ctm"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.specials.colladaviewer": {
@@ -107,6 +127,10 @@
 			"dependencies": [
 				"ext.w3d.threejs",
 				"ext.w3d.collada"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		},
 		"ext.w3d.viewloader": {
@@ -118,6 +142,10 @@
 				"ext.w3d.ctm",
 				"ext.w3d.collada",
 				"ext.w3d.shape"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
 			]
 		}
 	},

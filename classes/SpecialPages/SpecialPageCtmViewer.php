@@ -8,7 +8,7 @@
 
 namespace Wiki3D\SpecialPages;
 
-use Wiki3D\Builder\ShapeBuilder;
+use Wiki3D\Builder\CtmBuilder;
 
 class SpecialPageCtmViewer extends BaseSpecialPage {
 
@@ -20,7 +20,7 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
 	}
 
 	protected function getFileExtensionToSearch() {
-		return '.' . ShapeBuilder::FILE_EXTENSION;
+		return '.' . CtmBuilder::FILE_EXTENSION;
 	}
 
 	protected function getBuilderOptions() {
@@ -45,8 +45,8 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
 
 		return <<<EOT
 <div id="w3dWrapper">
-    <div class="controls" id="controls">
-    	<button id="toggleButton">&times;</button>
+    <div class="controls hidden" id="controls">
+    	<button id="toggleButton">></button>
         <div class="form-group-wrapper">
             <p class="title">Ship</p>
             <div class="form-group">
@@ -112,9 +112,6 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
             <div class="form-group">
                 <label for="sceneScene">Scene Selection</label>
                 <select id="sceneScene">
-                    <option value="default">Default</option>
-                    <option value="space">Space</option>
-                    <option value="starcitizen">Star Citizen</option>
                 </select>
             </div>
             <div class="form-group">

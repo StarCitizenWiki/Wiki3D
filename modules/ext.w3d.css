@@ -1,3 +1,7 @@
-canvas.controls {
+canvas.has-controls {
     cursor: pointer;
+}
+
+table .w3d-wrapper {
+    margin-bottom: -6px;
 }

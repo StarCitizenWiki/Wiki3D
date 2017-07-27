@@ -6,20 +6,29 @@ $( function () {
 		ctmViewer = mw.config.get( 'w3d-ctm' ).viewers[ 0 ];
 		addEventListener();
 		addLightList();
+		addSceneList();
 		addRenderResolutions();
 	}
 
 	function addEventListener() {
-		document.getElementById( 'toggleButton' ).addEventListener( 'click', function () {
-			let controls;
+		let controls;
 
+		controls = document.getElementById( 'controls' );
+		controls.classList.remove( 'hidden' );
+
+		document.getElementById( 'toggleButton' ).addEventListener( 'click', function () {
 			controls = document.getElementById( 'controls' );
+			let button = document.getElementById( 'toggleButton' );
+			controls.classList.remove( 'hidden' );
 			if ( controls.className.indexOf( 'visible' ) > -1 ) {
 				controls.classList.remove( 'visible' );
+				button.innerHTML = '>';
 			} else {
 				controls.classList.add( 'visible' );
+				button.innerHTML = '&times;';
 			}
 		} );
+
 		document.getElementById( 'shipWireframe' ).addEventListener( 'click', function ( event ) {
 			let target;
 
@@ -156,17 +165,37 @@ $( function () {
 
 	}
 
+	function addSceneList() {
+		let listElement, sceneList;
+
+		sceneList = mw.w3d.getScenes();
+		listElement = document.getElementById( 'sceneScene' );
+
+		for ( let i = 0; i < sceneList.length; i++ ) {
+			let optionElement;
+
+			if ( sceneList[ i ].name !== undefined ) {
+				optionElement = document.createElement( 'option' );
+				optionElement.value = sceneList[ i ].name;
+
+				optionElement.innerHTML = sceneList[ i ].name;
+
+				listElement.appendChild( optionElement );
+			}
+		}
+	}
+
 	function addRenderResolutions() {
 		let renderResolutionList, listElement, currentResolution;
 
 		renderResolutionList = mw.w3d.getResolutions();
 		listElement = document.getElementById( 'resolutionSelect' );
-		currentResolution = mw.config.get( 'w3d' ).ctm.configs[ 0 ].renderer.resolution;
+		currentResolution = mw.config.get( 'w3d-ctm' ).configs[ 0 ].renderer.resolution;
 
 		for ( let name in renderResolutionList ) {
 			let optionElement;
 
-			if ( !renderResolutionList[ name ].listName ) {
+			if ( renderResolutionList[ name ].listName !== undefined ) {
 				optionElement = document.createElement( 'option' );
 				optionElement.value = name;
 				if ( currentResolution === name ) {

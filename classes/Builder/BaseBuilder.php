@@ -276,6 +276,12 @@ abstract class BaseBuilder {
 			$config['resolution'] = $this->options['resolution'];
 		}
 
+		if ( array_key_exists( 'clear_color', $this->options ) ) {
+
+			$config['clearColor'] = 'white';
+			$config['opacity'] = 1;
+		}
+
 		if ( !empty( $config ) ) {
 			$this->config['renderer'] = $config;
 		}
@@ -295,7 +301,7 @@ abstract class BaseBuilder {
 			$output->addJsConfigVars( $this->baseStructure );
 		}
 
-		$this->output = "<div id='{$this->config['renderer']['parent']}'></div>";
+		$this->output = "<div id='{$this->config['renderer']['parent']}' class='w3d-wrapper'></div>";
 
 		$output->addModules( $this->modules );
 	}

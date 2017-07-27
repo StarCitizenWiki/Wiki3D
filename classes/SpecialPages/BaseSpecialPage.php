@@ -54,7 +54,7 @@ abstract class BaseSpecialPage extends SpecialPage {
 			$this->getOutput()->addHTML( $this->getControlsHtml() );
 		}
 		catch ( InvalidArgumentException $e ) {
-			$this->getOutput()->addHTML( $this->msg( 'wiki3dinvalidArguments' ) );
+			$this->getOutput()->addHTML( $this->msg( 'wiki3d-invalidArguments' ) );
 		}
 	}
 
