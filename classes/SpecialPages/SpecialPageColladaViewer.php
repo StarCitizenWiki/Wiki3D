@@ -45,6 +45,7 @@ class SpecialPageColladaViewer extends BaseSpecialPage {
 
 		return <<<EOT
 <div id="w3dWrapper">
+	<button id="fullScreen" class="hidden">&nearrow;</button>
     <div class="controls hidden" id="controls">
     	<button id="toggleButton">></button>
         <div class="form-group-wrapper">

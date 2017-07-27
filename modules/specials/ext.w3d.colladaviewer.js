@@ -3,6 +3,13 @@ $( function () {
 	let colladaViewer;
 
 	if ( mw.config.get( 'w3d-collada' ) !== null ) {
+		let controls, button;
+
+		controls = document.getElementById( 'controls' );
+		controls.classList.remove( 'hidden' );
+		button = document.getElementById( 'fullScreen' );
+		button.classList.remove( 'hidden' );
+
 		colladaViewer = mw.config.get( 'w3d-collada' ).viewers[ 0 ];
 		addEventListener();
 		addLightList();
@@ -11,21 +18,33 @@ $( function () {
 	}
 
 	function addEventListener() {
-		let controls;
-
-		controls = document.getElementById( 'controls' );
-		controls.classList.remove( 'hidden' );
-
 		document.getElementById( 'toggleButton' ).addEventListener( 'click', function () {
+			let controls, button;
+
 			controls = document.getElementById( 'controls' );
-			let button = document.getElementById( 'toggleButton' );
-			controls.classList.remove( 'hidden' );
+			button = document.getElementById( 'toggleButton' );
+
 			if ( controls.className.indexOf( 'visible' ) > -1 ) {
 				controls.classList.remove( 'visible' );
 				button.innerHTML = '>';
 			} else {
 				controls.classList.add( 'visible' );
 				button.innerHTML = '&times;';
+			}
+		} );
+
+		document.getElementById( 'fullScreen' ).addEventListener( 'click', function () {
+			let wrapper, button;
+
+			wrapper = document.getElementById( 'w3dWrapper' );
+			button = document.getElementById( 'fullScreen' );
+
+			if ( wrapper.className.indexOf( 'fullscreen' ) > -1 ) {
+				wrapper.classList.remove( 'fullscreen' );
+				button.innerHTML = '&nearrow;';
+			} else {
+				wrapper.classList.add( 'fullscreen' );
+				button.innerHTML = '&swarrow;';
 			}
 		} );
 
