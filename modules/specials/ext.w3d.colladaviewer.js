@@ -2,8 +2,8 @@
 $( function () {
 	let colladaViewer;
 
-	if ( mw.config.get( 'w3d' ) !== null ) {
-		colladaViewer = mw.config.get( 'w3d' ).collada.viewers[ 0 ];
+	if ( mw.config.get( 'w3d-collada' ) !== null ) {
+		colladaViewer = mw.config.get( 'w3d-collada' ).viewers[ 0 ];
 		addEventListener();
 		addLightList();
 		addRenderResolutions();
@@ -80,7 +80,7 @@ $( function () {
 			default:
 				break;
 		}
-		colladaViewer.updateShip( 'rotation', update );
+		colladaViewer.updateMainObject( 'rotation', update );
 	}
 
 	function changePosition( event ) {
@@ -105,7 +105,7 @@ $( function () {
 			default:
 				break;
 		}
-		colladaViewer.updateShip( 'position', update );
+		colladaViewer.updateMainObject( 'position', update );
 	}
 
 	function addLightList() {

@@ -1,9 +1,13 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"FoXFTW"
+		]
 	},
 	"wiki3d-desc": "Interact with 3D Files",
-	"wiki3d-i18n-welcome": "Welcome to the localization file of the Wiki3D extension.",
 	"wiki3d-shipviewer": "{{SITENAME}} Ship Viewer",
-	"helloworld": "Hello world"
+	"wiki3d-stationviewer": "{{SITENAME}} Station Viewer",
+	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
+	"wiki3d-fileOptionMissing": "File-Option is missing",
+	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed"
 }

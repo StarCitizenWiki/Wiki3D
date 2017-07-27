@@ -1,17 +1,38 @@
 'use strict';
 $( function () {
-	let w3dConfig = mw.config.get( 'w3d' );
-	if ( w3dConfig !== null ) {
-		if ( 'ctm' in w3dConfig ) {
-			for ( let i = 0; i < w3dConfig[ 'ctm' ][ 'configs' ].length; i++ ) {
-				w3dConfig[ 'ctm' ][ 'viewers' ].push( new mw.w3d.CtmViewer( w3dConfig[ 'ctm' ][ 'configs' ][ i ] ) );
-			}
+	if ( mw.config.get( 'w3d-ctm' ) !== null ) {
+		let config;
+
+		config = mw.config.get( 'w3d-ctm' );
+
+		for ( let i = 0; i < config[ 'configs' ].length; i++ ) {
+			config[ 'viewers' ].push( new mw.w3d.CtmViewer( config[ 'configs' ][ i ] ) );
 		}
-		if ( 'collada' in w3dConfig ) {
-			for ( let i = 0; i < w3dConfig[ 'collada' ][ 'configs' ].length; i++ ) {
-				w3dConfig[ 'collada' ][ 'viewers' ].push( new mw.w3d.ColladaViewer( w3dConfig[ 'collada' ][ 'configs' ][ i ] ) );
-			}
-		}
+
+		mw.config.set( 'w3d-ctm', config );
 	}
-	mw.config.set( 'w3d', w3dConfig );
+
+	if ( mw.config.get( 'w3d-collada' ) !== null ) {
+		let config;
+
+		config = mw.config.get( 'w3d-collada' );
+
+		for ( let i = 0; i < config[ 'configs' ].length; i++ ) {
+			config[ 'viewers' ].push( new mw.w3d.ColladaViewer( config[ 'configs' ][ i ] ) );
+		}
+
+		mw.config.set( 'w3d-collada', config );
+	}
+
+	if ( mw.config.get( 'w3d-shape' ) !== null ) {
+		let config;
+
+		config = mw.config.get( 'w3d-shape' );
+
+		for ( let i = 0; i < config[ 'configs' ].length; i++ ) {
+			config[ 'viewers' ].push( new mw.w3d.ShapeViewer( config[ 'configs' ][ i ] ) );
+		}
+
+		mw.config.set( 'w3d-shape', config );
+	}
 } );

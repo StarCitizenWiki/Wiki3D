@@ -3,11 +3,11 @@
 	const POSITIONS = [ 'x', 'y', 'z' ], POSITION_TYPES = [ 'position', 'rotation' ];
 
 	/**
-	 * @class mw.w3d.ColladaViewer
+	 * @class mw.w3d.ShapeViewer
 	 *
 	 * @constructor
 	 */
-	function ColladaViewer( config ) {
+	function ShapeViewer( config ) {
 		let mainObject,
 			sceneObject,
 			renderObject,
@@ -54,7 +54,7 @@
 		}
 
 		function createRenderer() {
-			let renderer, container, progress;
+			let renderer;
 
 			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
 			renderer.setClearColor( config.renderer.clearColor, config.renderer.opacity );
@@ -65,14 +65,6 @@
 			);
 
 			renderObject = renderer;
-
-			container = document.getElementById( config.renderer.parent );
-			progress = document.createElement( 'progress' );
-			progress.max = 100;
-			progress.value = 0;
-			progress.id = Math.random().toString( 36 ).replace( /[^a-z]+/g, '' ).substr( 0, 5 );
-			renderObject.progressElement = progress;
-			container.appendChild( renderer.progressElement );
 		}
 
 		function createControls() {
@@ -103,26 +95,27 @@
 		function loadMainObject() {
 			let loader;
 
-			loader = new THREE.ColladaLoader();
-			loader.options.convertUpAxis = true;
-			loader.options.centerGeometry = true;
+			loader = new THREE.TextureLoader();
+			loader.crossOrigin = 'anonymous';
 
 			if ( config.mainObject.path !== '' ) {
-				loader.load( config.mainObject.path, createMesh, updateProgress );
+				loader.load( config.mainObject.path, createMesh );
 			}
 
-			function createMesh( geometry ) {
-				mainObject = geometry.scene;
+			function createMesh( texture ) {
+				let geometry, material;
+
+				geometry = mw.w3d.geometryFactory(
+					config.mainObject.type,
+					config.mainObject.config
+				);
+
+				material = new THREE.MeshPhongMaterial();
+				material.map = texture;
+
+				mainObject = new THREE.Mesh( geometry, material );
 
 				configureMainObject();
-			}
-
-			function updateProgress( progress ) {
-				let value;
-
-				value = ( progress.loaded * 100 ) / progress.total;
-
-				renderObject.progressElement.value = value.toFixed( 3 );
 			}
 
 			function configureMainObject() {
@@ -166,14 +159,10 @@
 		}
 
 		function addRenderElement() {
-			let container, progress;
+			let container;
 
 			container = document.getElementById( config.renderer.parent );
-
 			container.appendChild( renderObject.domElement );
-
-			progress = document.getElementById( renderObject.progressElement.id );
-			progress.outerHTML = '';
 		}
 
 		function animate() {
@@ -255,5 +244,5 @@
 		};
 	}
 
-	mw.w3d.ColladaViewer = ColladaViewer;
+	mw.w3d.ShapeViewer = ShapeViewer;
 }() );

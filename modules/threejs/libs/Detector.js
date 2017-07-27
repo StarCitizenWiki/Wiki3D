@@ -5,12 +5,13 @@
 
 var Detector = {
 
-	canvas: !! window.CanvasRenderingContext2D,
-	webgl: ( function () {
+	canvas: !!window.CanvasRenderingContext2D,
+	webgl: (function () {
 
 		try {
 
-			var canvas = document.createElement( 'canvas' ); return !! ( window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ) );
+			var canvas = document.createElement( 'canvas' );
+			return !!( window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ) );
 
 		} catch ( e ) {
 
@@ -18,8 +19,8 @@ var Detector = {
 
 		}
 
-	} )(),
-	workers: !! window.Worker,
+	})(),
+	workers: !!window.Worker,
 	fileapi: window.File && window.FileReader && window.FileList && window.Blob,
 
 	getWebGLErrorMessage: function () {
@@ -36,7 +37,7 @@ var Detector = {
 		element.style.width = '400px';
 		element.style.margin = '5em auto 0';
 
-		if ( ! this.webgl ) {
+		if ( !this.webgl ) {
 
 			element.innerHTML = window.WebGLRenderingContext ? [
 				'Your graphics card does not seem to support <a href="http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation" style="color:#000">WebGL</a>.<br />',

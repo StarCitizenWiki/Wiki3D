@@ -46,6 +46,16 @@
 				name: 'default',
 				lights: [
 					{
+						type: 'hemisphere',
+						name: 'hemisphere',
+						listName: 'Hemisphere Light',
+						config: {
+							skyColor: 0xffffff,
+							groundColor: 0xffffff,
+							intensity: 1
+						}
+					},
+					{
 						type: 'directional',
 						name: 'directional_1',
 						listName: 'Directional Light 1',
@@ -200,194 +210,7 @@
 				height: 2160,
 				aspect: 16 / 9
 			}
-		},
-		POSITIONS = [ 'x', 'y', 'z' ],
-		POSITION_TYPES = [ 'position', 'rotation' ];
-
-	function lightFactory( type, config ) {
-		switch ( type ) {
-			case 'hemisphere':
-				return new THREE.HemisphereLight(
-					config.skyColor,
-					config.groundColor,
-					config.intensity
-				);
-
-			case 'directional':
-				return new THREE.DirectionalLight(
-					config.color,
-					config.intensity
-				);
-
-			case 'ambient':
-				return new THREE.AmbientLight(
-					config.color,
-					config.intensity
-				);
-
-			case 'point':
-				return new THREE.PointLight(
-					config.color,
-					config.intensity,
-					config.distance,
-					config.decay
-				);
-
-			case 'spot':
-				return new THREE.SpotLight(
-					config.color,
-					config.intensity,
-					config.distance,
-					config.angle,
-					config.penumbra,
-					config.decay
-				);
-
-			default:
-				return new THREE.Light(
-					config.color,
-					config.intensity
-				);
-		}
-	}
-
-	function geometryFactory( type, config ) {
-		switch ( type ) {
-			case 'box':
-				return new THREE.BoxBufferGeometry(
-					config.width,
-					config.height,
-					config.depth,
-					config.widthSegments,
-					config.heightSegments,
-					config.depthSegments
-				);
-
-			case 'circle':
-				return new THREE.CircleBufferGeometry(
-					config.radius,
-					config.segments,
-					config.thetaStart,
-					config.thetaLength
-				);
-
-			case 'cone':
-				return new THREE.ConeBufferGeometry(
-					config.radius,
-					config.height,
-					config.radiusSegments,
-					config.heightSegments,
-					config.openEnded,
-					config.thetaStart,
-					config.thetaLength
-				);
-
-			case 'cylinder':
-				return new THREE.CylinderBufferGeometry(
-					config.radiusTop,
-					config.radiusBottom,
-					config.height,
-					config.radiusSegments,
-					config.heightSegments,
-					config.openEnded,
-					config.thetaStart,
-					config.thetaLength
-				);
-
-			case 'dodecahedron':
-				return new THREE.DodecahedronBufferGeometry(
-					config.radius
-				);
-
-			case 'icosahedron':
-				return new THREE.IcosahedronBufferGeometry(
-					config.radius
-				);
-
-			case 'octahedron':
-				return new THREE.OctahedronBufferGeometry(
-					config.radius
-				);
-
-			case 'plane':
-				return new THREE.PlaneBufferGeometry(
-					config.width,
-					config.height,
-					config.widthSegments,
-					config.heightSegments
-				);
-
-			case 'ring':
-				return new THREE.RingBufferGeometry(
-					config.innerRadius,
-					config.outerRadius,
-					config.thetaSegments,
-					config.phiSegments,
-					config.thetaStart,
-					config.thetaLength
-				);
-
-			case 'sphere':
-				return new THREE.SphereBufferGeometry(
-					config.radius,
-					config.widthSegments,
-					config.heightSegments,
-					config.phiStart,
-					config.phiLength,
-					config.thetaStart,
-					config.thetaLength
-				);
-
-			case 'tetrahedron':
-				return new THREE.TetrahedronBufferGeometry(
-					config.radius
-				);
-
-			case 'torus':
-				return new THREE.TorusBufferGeometry(
-					config.radius,
-					config.tube,
-					config.radialSegments,
-					config.tubularSegments,
-					config.arc
-				);
-
-			case 'torusknot':
-				return new THREE.TorusKnotBufferGeometry(
-					config.radius,
-					config.tube,
-					config.radialSegments,
-					config.tubularSegments,
-					config.p,
-					config.q
-				);
-
-			default:
-				return new THREE.BufferGeometry();
-		}
-	}
-
-	function materialFactory( type ) {
-		switch ( type ) {
-			case 'basic':
-				return new THREE.MeshBasicMaterial();
-
-			case 'lambert':
-				return new THREE.MeshLambertMaterial();
-
-			case 'normal':
-				return new THREE.MeshNormalMaterial();
-
-			case 'phong':
-				return new THREE.MeshPhongMaterial();
-
-			case 'standard':
-				return new THREE.MeshStandardMaterial();
-
-			default:
-				return new THREE.Material();
-		}
-	}
+		};
 
 	function createGroups() {
 		let groups;
@@ -404,12 +227,12 @@
 				for ( let j = 0; j < SCENES[ i ].meshes.length; ++j ) {
 					let geometry, material, mesh;
 
-					geometry = geometryFactory(
+					geometry = mw.w3d.geometryFactory(
 						SCENES[ i ].meshes[ j ].geometry.type,
 						SCENES[ i ].meshes[ j ].geometry.config
 					);
 
-					material = materialFactory( SCENES[ i ].meshes[ j ].material.type );
+					material = mw.w3d.materialFactory( SCENES[ i ].meshes[ j ].material.type );
 					material.setValues( SCENES[ i ].meshes[ j ].material.config );
 
 					mesh = new THREE.Mesh( geometry, material );
@@ -424,7 +247,7 @@
 					let lightData, light;
 
 					lightData = SCENES[ i ].lights[ j ];
-					light = lightFactory( lightData.type, lightData.config );
+					light = mw.w3d.lightFactory( lightData.type, lightData.config );
 					if ( 'position' in lightData ) {
 						light.position.set(
 							lightData.position.x,
@@ -455,7 +278,7 @@
 
 		for ( let i = 0; i < MATERIALS.length; ++i ) {
 			let material;
-			material = materialFactory( MATERIALS[ i ].material );
+			material = mw.w3d.materialFactory( MATERIALS[ i ].material );
 			material.setValues( MATERIALS[ i ].config );
 			materials[ MATERIALS[ i ].name ] = material;
 		}
@@ -468,6 +291,188 @@
 	 * @singleton
 	 */
 	mw.w3d = {
+		lightFactory: function ( type, config ) {
+			switch ( type ) {
+				case 'hemisphere':
+					return new THREE.HemisphereLight(
+						config.skyColor,
+						config.groundColor,
+						config.intensity
+					);
+
+				case 'directional':
+					return new THREE.DirectionalLight(
+						config.color,
+						config.intensity
+					);
+
+				case 'ambient':
+					return new THREE.AmbientLight(
+						config.color,
+						config.intensity
+					);
+
+				case 'point':
+					return new THREE.PointLight(
+						config.color,
+						config.intensity,
+						config.distance,
+						config.decay
+					);
+
+				case 'spot':
+					return new THREE.SpotLight(
+						config.color,
+						config.intensity,
+						config.distance,
+						config.angle,
+						config.penumbra,
+						config.decay
+					);
+
+				default:
+					return new THREE.Light(
+						config.color,
+						config.intensity
+					);
+			}
+		},
+		geometryFactory: function ( type, config ) {
+			switch ( type ) {
+				case 'box':
+					return new THREE.BoxBufferGeometry(
+						config.width,
+						config.height,
+						config.depth,
+						config.widthSegments,
+						config.heightSegments,
+						config.depthSegments
+					);
+
+				case 'circle':
+					return new THREE.CircleBufferGeometry(
+						config.radius,
+						config.segments,
+						config.thetaStart,
+						config.thetaLength
+					);
+
+				case 'cone':
+					return new THREE.ConeBufferGeometry(
+						config.radius,
+						config.height,
+						config.radiusSegments,
+						config.heightSegments,
+						config.openEnded,
+						config.thetaStart,
+						config.thetaLength
+					);
+
+				case 'cylinder':
+					return new THREE.CylinderBufferGeometry(
+						config.radiusTop,
+						config.radiusBottom,
+						config.height,
+						config.radiusSegments,
+						config.heightSegments,
+						config.openEnded,
+						config.thetaStart,
+						config.thetaLength
+					);
+
+				case 'dodecahedron':
+					return new THREE.DodecahedronBufferGeometry(
+						config.radius
+					);
+
+				case 'icosahedron':
+					return new THREE.IcosahedronBufferGeometry(
+						config.radius
+					);
+
+				case 'octahedron':
+					return new THREE.OctahedronBufferGeometry(
+						config.radius
+					);
+
+				case 'plane':
+					return new THREE.PlaneBufferGeometry(
+						config.width,
+						config.height,
+						config.widthSegments,
+						config.heightSegments
+					);
+
+				case 'ring':
+					return new THREE.RingBufferGeometry(
+						config.innerRadius,
+						config.outerRadius,
+						config.thetaSegments,
+						config.phiSegments,
+						config.thetaStart,
+						config.thetaLength
+					);
+
+				case 'sphere':
+					return new THREE.SphereBufferGeometry(
+						config.radius,
+						config.widthSegments,
+						config.heightSegments,
+						config.phiStart,
+						config.phiLength,
+						config.thetaStart,
+						config.thetaLength
+					);
+
+				case 'tetrahedron':
+					return new THREE.TetrahedronBufferGeometry(
+						config.radius
+					);
+
+				case 'torus':
+					return new THREE.TorusBufferGeometry(
+						config.radius,
+						config.tube,
+						config.radialSegments,
+						config.tubularSegments,
+						config.arc
+					);
+
+				case 'torusknot':
+					return new THREE.TorusKnotBufferGeometry(
+						config.radius,
+						config.tube,
+						config.radialSegments,
+						config.tubularSegments,
+						config.p,
+						config.q
+					);
+
+				default:
+					return new THREE.BufferGeometry();
+			}
+		},
+		materialFactory: function ( type ) {
+			switch ( type ) {
+				case 'basic':
+					return new THREE.MeshBasicMaterial();
+
+				case 'lambert':
+					return new THREE.MeshLambertMaterial();
+
+				case 'normal':
+					return new THREE.MeshNormalMaterial();
+
+				case 'phong':
+					return new THREE.MeshPhongMaterial();
+
+				case 'standard':
+					return new THREE.MeshStandardMaterial();
+
+				default:
+					return new THREE.Material();
+			}
+		},
 		getMaterials: function () {
 			return createMaterials();
 		},

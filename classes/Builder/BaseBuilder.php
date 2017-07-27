@@ -5,7 +5,13 @@
  * Time: 18:53
  */
 
-abstract class Wiki3DBuilder {
+namespace Wiki3D\Builder;
+
+use OutputPage, ParserOutput, PPFrame, Parser, SpecialPage;
+use Wiki3D\Wiki3DConfig;
+
+
+abstract class BaseBuilder {
 
 	protected $arrayKey = '';
 
@@ -13,6 +19,9 @@ abstract class Wiki3DBuilder {
 	 * @var OutputPage | ParserOutput
 	 */
 	protected $outputPage;
+	/**
+	 * @var PPFrame
+	 */
 	protected $frame;
 	protected $options;
 
@@ -29,12 +38,33 @@ abstract class Wiki3DBuilder {
 	 * @param PPFrame|null $frame
 	 * @param null $args
 	 */
-	public function __construct( &$parser, PPFrame $frame = null, $args = null ) {
-		$this->outputPage = $parser->getOutput();
-		$this->frame = $frame;
-		$this->options = $args;
+	public function __construct( &$parser = null, $frame = null, $args = null ) {
+		$this->setParser( $parser );
+		if ( !is_null( $frame ) ) {
+			$this->setFrame( $frame );
+		}
+		$this->setArgs( $args );
 		$this->defaultConfig = $this->getDefaultConfig();
-		$this->baseStructure = Wiki3D::getBaseStructure();
+		$this->baseStructure = Wiki3DConfig::getBaseStructure($this->arrayKey);
+	}
+
+	/**
+	 * @param Parser|SpecialPage $parser
+	 */
+	public function setParser( &$parser ) {
+		if ( !is_null( $parser ) ) {
+			$this->outputPage = $parser->getOutput();
+		}
+	}
+
+	public function setFrame( PPFrame $frame ) {
+		$this->frame = $frame;
+	}
+
+	public function setArgs( $args ) {
+		if ( !is_null( $args ) ) {
+			$this->options = $args;
+		}
 	}
 
 	protected function getDefaultConfig() {
@@ -57,21 +87,6 @@ abstract class Wiki3DBuilder {
 		}
 		$this->makeConfig();
 		$this->setDefaultModules();
-	}
-
-	public function addToOutput() {
-		$output = $this->outputPage;
-
-		if ( get_class( $output ) == 'ParserOutput' &&
-		     array_key_exists( 'w3d', $output->mJsConfigVars ) &&
-		     is_array( $output->mJsConfigVars['w3d'][$this->arrayKey]['configs'] ) &&
-		     count( $output->mJsConfigVars['w3d'][$this->arrayKey]['configs'] ) > 0 ) {
-			$output->mJsConfigVars['w3d'][$this->arrayKey]['configs'][] = $this->config;
-		} else {
-			$output->addJsConfigVars( $this->baseStructure );
-		}
-
-		$output->addModules( $this->modules );
 	}
 
 	private function parseOptions() {
@@ -111,13 +126,14 @@ abstract class Wiki3DBuilder {
 
 	private function makeConfig() {
 		$this->makeModuleConfig();
+		$this->makeRotationConfig();
 		$this->makeMaterialConfig();
 		$this->makeCameraConfig();
 		$this->makeControlsConfig();
 		$this->makeRendererConfig();
 
 		$this->config = array_replace_recursive( $this->defaultConfig, $this->config );
-		$this->baseStructure['w3d'][$this->arrayKey]['configs'][] = $this->config;
+		$this->baseStructure["w3d-$this->arrayKey"]['configs'][] = $this->config;
 	}
 
 	protected function makeModuleConfig() {
@@ -137,7 +153,7 @@ abstract class Wiki3DBuilder {
 		}
 
 		if ( array_key_exists( 'material', $this->options ) &&
-		     in_array( strtolower( $this->options['material'] ), Wiki3D::MATERIALS ) ) {
+		     in_array( strtolower( $this->options['material'] ), Wiki3DConfig::MATERIALS ) ) {
 			$config['current'] = $this->options['material'];
 		}
 
@@ -214,7 +230,7 @@ abstract class Wiki3DBuilder {
 		}
 
 		if ( array_key_exists( 'resolution', $this->options ) &&
-		     in_array( $this->options['resolution'], Wiki3D::RENDER_RESOLUTIONS ) ) {
+		     in_array( $this->options['resolution'], Wiki3DConfig::RENDER_RESOLUTIONS ) ) {
 			$config['resolution'] = $this->options['resolution'];
 		}
 
@@ -223,7 +239,59 @@ abstract class Wiki3DBuilder {
 		}
 	}
 
+	protected function makeRotationConfig() {
+		$config = [
+			'speed' => [],
+		];
+
+		if ( array_key_exists( 'rotation_x', $this->options ) ) {
+			$config['x'] = floatval( $this->options['rotation_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_y', $this->options ) ) {
+			$config['y'] = floatval( $this->options['rotation_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_z', $this->options ) ) {
+			$config['z'] = floatval( $this->options['rotation_z'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_x', $this->options ) ) {
+			$config['speed']['x'] = floatval( $this->options['rotation_speed_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_y', $this->options ) ) {
+			$config['speed']['y'] = floatval( $this->options['rotation_speed_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_z', $this->options ) ) {
+			$config['speed']['z'] = floatval( $this->options['rotation_speed_z'] );
+		}
+
+		if ( empty( $config['speed'] ) ) {
+			unset( $config['speed'] );
+		}
+
+		if ( !empty( $config ) ) {
+			$this->config['mainObject']['rotation'] = $config;
+		}
+	}
+
 	protected function setDefaultModules() {
+	}
+
+	public function addToOutput() {
+		$output = $this->outputPage;
+
+		if ( get_class( $output ) == 'ParserOutput' &&
+		     array_key_exists( "w3d-$this->arrayKey", $output->mJsConfigVars ) &&
+		     count( $output->mJsConfigVars["w3d-$this->arrayKey"]['configs'] ) > 0 ) {
+			$output->mJsConfigVars["w3d-$this->arrayKey"]['configs'][] = $this->config;
+		} else {
+			$output->addJsConfigVars( $this->baseStructure );
+		}
+
+		$output->addModules( $this->modules );
 	}
 
 	public function setModules( array $modules ) {

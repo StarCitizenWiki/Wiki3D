@@ -1,16 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Shirayuki",
-			"Umherirrender",
-			"Amire80",
-			"Fhocutt",
-			"Liuxinyu970226"
+			"FoXFTW"
 		]
 	},
-	"wiki3d-desc": "{{desc|name=Wiki3D|url=https://star-citizen.wiki/User:FoXFTW }}",
-	"wiki3d-i18n-welcome": "Used to greet the user when reading the i18n/??.json file.",
-	"wiki3d-helloworld": "Page title of the HelloWorld special page.\n{{Identical|Hello World}}",
-	"wiki3d-helloworld-intro": "Text displayed on the HelloWorld SpecialPage.",
-	"helloworld": "Text of the link to the HelloWorld special page on SpecialPages.\n{{Identical|Hello World}}"
+	"wiki3d-desc": "Interact with 3D Files",
+	"wiki3d-shipviewer": "{{SITENAME}} Ship Viewer",
+	"wiki3d-stationviewer": "{{SITENAME}} Station Viewer",
+	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
+	"wiki3d-fileOptionMissing": "File-Option is missing",
+	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed"
 }

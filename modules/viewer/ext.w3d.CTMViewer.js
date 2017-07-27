@@ -3,17 +3,18 @@
 	const POSITIONS = [ 'x', 'y', 'z' ], POSITION_TYPES = [ 'position', 'rotation' ];
 
 	/**
-	 * @class mw.w3d.ColladaViewer
+	 * @class mw.w3d.CtmViewer
 	 *
 	 * @constructor
 	 */
-	function ColladaViewer( config ) {
+	function CtmViewer( config ) {
 		let mainObject,
 			sceneObject,
 			renderObject,
 			controlsObject,
 			cameraObject,
-			sceneGroups;
+			sceneGroups,
+			materials;
 
 		if ( !Detector.webgl ) {
 			Detector.addGetWebGLMessage( { parent: document.getElementById( 'container' + config.key ) } );
@@ -23,6 +24,8 @@
 
 		function init() {
 			sceneGroups = mw.w3d.getSceneGroups();
+			sceneGroups[ 'default' ].getObjectByName( 'hemisphere' ).visible = false;
+			materials = mw.w3d.getMaterials();
 
 			createScene();
 			createCamera();
@@ -103,18 +106,13 @@
 		function loadMainObject() {
 			let loader;
 
-			loader = new THREE.ColladaLoader();
-			loader.options.convertUpAxis = true;
-			loader.options.centerGeometry = true;
+			loader = new THREE.CTMLoader();
 
 			if ( config.mainObject.path !== '' ) {
-				loader.load( config.mainObject.path, createMesh, updateProgress );
-			}
-
-			function createMesh( geometry ) {
-				mainObject = geometry.scene;
-
-				configureMainObject();
+				loader.load( config.mainObject.path, createMesh, {
+					useWorker: true,
+					worker: new Worker( mw.config.get( 'wgExtensionAssetsPath' ) + '/Wiki3D/modules/threejs/ctm/CTMWorker.js' )
+				}, updateProgress );
 			}
 
 			function updateProgress( progress ) {
@@ -125,11 +123,18 @@
 				renderObject.progressElement.value = value.toFixed( 3 );
 			}
 
+			function createMesh( geometry ) {
+				mainObject = new THREE.Mesh(
+					geometry,
+					materials[ config.material.current ]
+				);
+				configureMainObject();
+			}
+
 			function configureMainObject() {
 				mainObject.position.set( 0, 0, 0 );
 				mainObject.castShadow = true;
 				mainObject.receiveShadow = true;
-				mainObject.matrixAutoUpdate = true;
 
 				mainObject.scale.set( config.mainObject.scale, config.mainObject.scale, config.mainObject.scale );
 				mainObject.rotation.set(
@@ -137,6 +142,7 @@
 					config.mainObject.rotation.y,
 					config.mainObject.rotation.z
 				);
+				mainObject.material.color.setHex( config.material.color );
 
 				normalizeMainObjectSize();
 			}
@@ -150,6 +156,12 @@
 				mainObject.scale.set( scale, scale, scale );
 
 				start();
+			}
+		}
+
+		function updateMaterialColor() {
+			if ( typeof mainObject.material.color !== 'undefined' ) {
+				mainObject.material.color.setHex( config.material.color );
 			}
 		}
 
@@ -211,6 +223,12 @@
 			return sceneGroups[ config.scene.current ].userData.lightList;
 		};
 
+		this.toggleWireFrame = function () {
+			if ( typeof mainObject.material.wireframe !== 'undefined' ) {
+				mainObject.material.wireframe = !mainObject.material.wireframe;
+			}
+		};
+
 		this.toggleLight = function ( lightName ) {
 			let light;
 
@@ -224,6 +242,12 @@
 			if ( POSITIONS.indexOf( update.target ) > -1 && POSITION_TYPES.indexOf( type ) > -1 ) {
 				mainObject[ type ][ update.target ] = update.value;
 			}
+
+		};
+
+		this.changeMaterialColor = function ( hexColor ) {
+			config.material.color = hexColor;
+			updateMaterialColor();
 		};
 
 		this.changeScene = function ( sceneName ) {
@@ -231,6 +255,19 @@
 				sceneObject.remove( sceneGroups[ config.scene.current ] );
 				sceneObject.add( sceneGroups[ sceneName ] );
 				config.scene.current = sceneName;
+			}
+		};
+
+		this.changeMaterial = function ( materialName ) {
+			if ( materialName in materials ) {
+				let material;
+
+				material = materials[ materialName ];
+				if ( typeof material.wireframe !== 'undefined' && typeof mainObject.material !== 'undefined' ) {
+					material.wireframe = mainObject.material.wireframe;
+				}
+				material.color = mainObject.material.color;
+				mainObject.material = material;
 			}
 		};
 
@@ -255,5 +292,5 @@
 		};
 	}
 
-	mw.w3d.ColladaViewer = ColladaViewer;
+	mw.w3d.CtmViewer = CtmViewer;
 }() );

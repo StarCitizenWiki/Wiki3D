@@ -6,53 +6,41 @@
  * @ingroup Extensions
  */
 
-class SpecialColladaViewer extends SpecialPage {
-	private $config;
+namespace Wiki3D\SpecialPages;
+
+use Wiki3D\Builder\ShapeBuilder;
+
+class SpecialPageCtmViewer extends BaseSpecialPage {
 
 	public function __construct() {
-		parent::__construct( 'StationViewer' );
+		parent::__construct( 'ShipViewer' );
+		$this->type = 'ctm';
 
 		$this->getOutput()->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
 	}
 
-	/**
-	 * Show the page to the user
-	 *
-	 * @param string $sub The subpage string argument (if any).
-	 *                    [[Special:HelloWorld/subpage]].
-	 *
-	 * @return void|string
-	 */
-	public function execute( $sub ) {
-		if ( !is_null( $sub ) && !empty( $sub ) ) {
-
-			$ctmBuilder = new Wiki3DBuilderCollada( $this );
-			$ctmBuilder->addPrebuildOptions( [
-				'file' => strip_tags( $sub ),
-				'controls' => true,
-				'resolution' => 'fullHD',
-				'parent' => 'w3dWrapper',
-			] );
-			try {
-				$ctmBuilder->build();
-				$this->config = $ctmBuilder->getConfig();
-				$ctmBuilder->setModules( [
-					'ext.w3d.threejs',
-					'ext.w3d.collada',
-					'ext.w3d.specials.colladaviewer',
-				] );
-				$ctmBuilder->addToOutput();
-				$this->getOutput()->addHTML( $this->getControlsHtml() );
-			}
-			catch ( InvalidArgumentException $e ) {
-				$this->getOutput()->addHTML( $this->msg( 'w3d-invalidArguments' ) );
-			}
-		} else {
-			$this->addValidLinksList();
-		}
+	protected function getFileExtensionToSearch() {
+		return '.' . ShapeBuilder::FILE_EXTENSION;
 	}
 
-	private function getControlsHtml() {
+	protected function getBuilderOptions() {
+		return [
+			'file' => strip_tags( $this->subPage ),
+			'controls' => true,
+			'resolution' => 'fullHD',
+			'parent' => 'w3dWrapper',
+		];
+	}
+
+	protected function getBuilderModules() {
+		return [
+			'ext.w3d.threejs',
+			'ext.w3d.ctm',
+			'ext.w3d.specials.shipviewer',
+		];
+	}
+
+	protected function getControlsHtml() {
 		$piHalf = round( M_PI_2, 2 );
 
 		return <<<EOT
@@ -61,6 +49,25 @@ class SpecialColladaViewer extends SpecialPage {
     	<button id="toggleButton">&times;</button>
         <div class="form-group-wrapper">
             <p class="title">Ship</p>
+            <div class="form-group">
+                <label for="shipColor">Color</label>
+                <input type="color" value="{$this->config['material']['colorHexStr']}" 
+                id="shipColor">
+            </div>
+            <div class="form-group">
+                <label for="shipMaterial">Material</label>
+                <select id="shipMaterial">
+                    <option value="default">Default</option>
+                    <option value="normal">Normal</option>
+                    <option value="rgb">RGB</option>
+                    <option value="shiny">Shiny</option>
+                    <option value="flat">Basic</option>
+                </select>
+            </div>
+            <div class="form-group">
+            	<label for="shipWireframe">Wireframe</label>
+                <button id="shipWireframe" class="green">Toggle</button>
+            </div>
 
             <p class="title">Rotation</p>
             <div class="form-group">
@@ -133,32 +140,4 @@ class SpecialColladaViewer extends SpecialPage {
 </div>
 EOT;
 	}
-
-	private function addValidLinksList() {
-		$dbSearchType = SearchEngineFactory::getSearchEngineClass( wfGetDB( DB_REPLICA ) );
-		$dbSearch = new $dbSearchType();
-
-		$dbSearch->setNamespaces( NS_FILE );
-		$sr = $dbSearch->searchTitle( '.dae' );
-
-		try {
-			$titles = $sr->extractTitles();
-		}
-		catch ( Exception $e ) {
-			$titles = [];
-		}
-
-		foreach ( $titles as $title ) {
-			$titleText = $title->getTitleValue()->getText();
-
-			$this->getOutput()
-				->addHTML( "<a href='{$this->getFullTitle()->getCanonicalURL()}/{$titleText}'>{$titleText}</a><br>" );
-		}
-	}
-
-	protected function getGroupName() {
-		return 'other';
-	}
 }
-
-

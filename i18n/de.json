@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"FoXFTW"
+		]
+	},
+	"wiki3d-desc": "Ermöglicht es mit 3D-Dateien zu interagieren und Texturen auf Objekte zu legen",
+	"wiki3d-shipviewer": "{{SITENAME}} Schiffbetrachter",
+	"wiki3d-stationviewer": "{{SITENAME}} Raumstationbetrachter",
+	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
+	"wiki3d-fileOptionMissing": "File-Option fehlt (|file=)",
+	"wiki3d-fileNotFoundOrWrongType": "Datei nicht gefunden oder Dateiendung nicht erlaubt"
+}

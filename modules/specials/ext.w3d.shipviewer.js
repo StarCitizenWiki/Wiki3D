@@ -2,8 +2,8 @@
 $( function () {
 	let ctmViewer;
 
-	if ( mw.config.get( 'w3d' ) !== null ) {
-		ctmViewer = mw.config.get( 'w3d' ).ctm.viewers[ 0 ];
+	if ( mw.config.get( 'w3d-ctm' ) !== null ) {
+		ctmViewer = mw.config.get( 'w3d-ctm' ).viewers[ 0 ];
 		addEventListener();
 		addLightList();
 		addRenderResolutions();
@@ -45,7 +45,7 @@ $( function () {
 
 			color = event.target.value;
 			color = color.replace( '#', '0x' );
-			ctmViewer.changeShipColor( color );
+			ctmViewer.changeMaterialColor( color );
 		} );
 
 		document.getElementById( 'sceneScene' ).addEventListener( 'change', function ( event ) {
@@ -108,7 +108,7 @@ $( function () {
 			default:
 				break;
 		}
-		ctmViewer.updateShip( 'rotation', update );
+		ctmViewer.updateMainObject( 'rotation', update );
 	}
 
 	function changePosition( event ) {
@@ -133,7 +133,7 @@ $( function () {
 			default:
 				break;
 		}
-		ctmViewer.updateShip( 'position', update );
+		ctmViewer.updateMainObject( 'position', update );
 	}
 
 	function addLightList() {

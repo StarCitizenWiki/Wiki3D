@@ -10,12 +10,19 @@
 	"type": "parserhook",
 	"AutoloadClasses": {
 		"Wiki3DHooks": "Wiki3D.hooks.php",
-		"Wiki3D": "Wiki3D.class.php",
-		"Wiki3DBuilder": "classes/Wiki3DBuilder.php",
-		"Wiki3DBuilderCtm": "classes/Wiki3DBuilderCTM.php",
-		"Wiki3DBuilderCollada": "classes/Wiki3DBuilderCollada.php",
-		"SpecialShipViewer": "specials/SpecialShipViewer.php",
-		"SpecialColladaViewer": "specials/SpecialColladaViewer.php"
+
+		"Wiki3D\\Wiki3D": "classes/Wiki3D.php",
+		"Wiki3D\\Wiki3DConfig": "classes/Wiki3DConfig.php",
+
+		"Wiki3D\\Builder\\BaseBuilder": "classes/Builder/BaseBuilder.php",
+		"Wiki3D\\Builder\\CtmBuilder": "classes/Builder/CtmBuilder.php",
+		"Wiki3D\\Builder\\ColladaBuilder": "classes/Builder/ColladaBuilder.php",
+		"Wiki3D\\Builder\\ShapeBuilder": "classes/Builder/ShapeBuilder.php",
+		"Wiki3D\\Builder\\BuilderFactory": "classes/Builder/BuilderFactory.php",
+
+		"Wiki3D\\SpecialPages\\BaseSpecialPage": "classes/SpecialPages/BaseSpecialPage.php",
+		"Wiki3D\\SpecialPages\\SpecialPageCtmViewer": "classes/SpecialPages/SpecialPageCtmViewer.php",
+		"Wiki3D\\SpecialPages\\SpecialPageColladaViewer": "classes/SpecialPages/SpecialPageColladaViewer.php"
 	},
 	"config": {
 		"Wiki3DEnableFoo": true
@@ -41,6 +48,9 @@
 				"modules/threejs/controls/OrbitControls.js",
 				"modules/threejs/libs/Detector.js",
 				"modules/ext.w3d.js"
+			],
+			"styles": [
+				"modules/ext.w3d.css"
 			]
 		},
 		"ext.w3d.ctm": {
@@ -58,6 +68,14 @@
 			"scripts": [
 				"modules/threejs/collada/ColladaLoader.js",
 				"modules/viewer/ext.w3d.ColladaViewer.js"
+			],
+			"dependencies": [
+				"ext.w3d.threejs"
+			]
+		},
+		"ext.w3d.shape": {
+			"scripts": [
+				"modules/viewer/ext.w3d.ShapeViewer.js"
 			],
 			"dependencies": [
 				"ext.w3d.threejs"
@@ -91,13 +109,13 @@
 		},
 		"ext.w3d.viewloader": {
 			"scripts": [
-				"modules/viewer/ext.w3d.viewloader.js",
-				"modules/specials/ext.w3d.colladaviewer.js"
+				"modules/viewer/ext.w3d.viewloader.js"
 			],
 			"dependencies": [
 				"ext.w3d.threejs",
 				"ext.w3d.ctm",
-				"ext.w3d.collada"
+				"ext.w3d.collada",
+				"ext.w3d.shape"
 			]
 		}
 	},
@@ -106,8 +124,8 @@
 		"remoteExtPath": "Wiki3D"
 	},
 	"SpecialPages": {
-		"ShipViewer": "SpecialShipViewer",
-		"StationViewer": "SpecialColladaViewer"
+		"ShipViewer": "Wiki3D\\SpecialPages\\SpecialPageCtmViewer",
+		"StationViewer": "Wiki3D\\SpecialPages\\SpecialPageColladaViewer"
 	},
 	"manifest_version": 1
 }
