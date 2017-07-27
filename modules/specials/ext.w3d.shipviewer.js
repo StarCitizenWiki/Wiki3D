@@ -166,14 +166,16 @@ $( function () {
 		for ( let name in renderResolutionList ) {
 			let optionElement;
 
-			optionElement = document.createElement( 'option' );
-			optionElement.value = name;
-			if ( currentResolution === name ) {
-				optionElement.setAttribute( 'selected', 'selected' );
-			}
-			optionElement.innerHTML = renderResolutionList[ name ].listName;
+			if ( !renderResolutionList[ name ].listName ) {
+				optionElement = document.createElement( 'option' );
+				optionElement.value = name;
+				if ( currentResolution === name ) {
+					optionElement.setAttribute( 'selected', 'selected' );
+				}
+				optionElement.innerHTML = renderResolutionList[ name ].listName;
 
-			listElement.appendChild( optionElement );
+				listElement.appendChild( optionElement );
+			}
 		}
 	}
 

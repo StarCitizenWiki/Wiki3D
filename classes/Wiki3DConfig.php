@@ -9,6 +9,9 @@ namespace Wiki3D;
 
 class Wiki3DConfig {
 	public const RENDER_RESOLUTIONS = [
+		'square250',
+		'square500',
+		'ships',
 		'sd',
 		'hd',
 		'fullHD',

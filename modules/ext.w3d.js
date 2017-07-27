@@ -186,6 +186,21 @@
 			}
 		],
 		RESOLUTIONS = {
+			square500: {
+				width: 500,
+				height: 500,
+				aspect: 1
+			},
+			square250: {
+				width: 250,
+				height: 250,
+				aspect: 1
+			},
+			ships: {
+				width: 320,
+				height: 200,
+				aspect: 320 / 200
+			},
 			sd: {
 				listName: 'SD',
 				width: 640,

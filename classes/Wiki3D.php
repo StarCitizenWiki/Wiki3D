@@ -18,23 +18,24 @@ use Wiki3D\Builder\ShapeBuilder;
 class Wiki3D {
 	public static function createCtmViewer( Parser &$parser, PPFrame $frame, $args ) {
 		$builder = new CtmBuilder( $parser, $frame, $args );
-		self::build( $builder );
+		return self::build( $builder );
 	}
 
 	public static function createColladaViewer( Parser &$parser, PPFrame $frame, $args ) {
 		$builder = new ColladaBuilder( $parser, $frame, $args );
-		self::build( $builder );
+		return self::build( $builder );
 	}
 
 	public static function createShapeViewer( Parser &$parser, PPFrame $frame, $args ) {
 		$builder = new ShapeBuilder( $parser, $frame, $args );
-		self::build( $builder );
+		return self::build( $builder );
 	}
 
 	private static function build( BaseBuilder $builder ) {
 		try {
 			$builder->build();
 			$builder->addToOutput();
+			return $builder->getOutput();
 		}
 		catch ( InvalidArgumentException $e ) {
 			return wfMessage( $e->getMessage() );

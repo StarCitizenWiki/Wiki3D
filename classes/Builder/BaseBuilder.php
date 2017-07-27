@@ -30,6 +30,8 @@ abstract class BaseBuilder {
 	protected $config;
 	protected $modules;
 
+	protected $output;
+
 	private $hasPrebuildOptions = false;
 
 	/**
@@ -190,8 +192,7 @@ abstract class BaseBuilder {
 			$config['colorHexStr'] = '#' . $color;
 		}
 
-		if ( array_key_exists( 'material', $this->options ) &&
-		     in_array( strtolower( $this->options['material'] ), Wiki3DConfig::MATERIALS ) ) {
+		if ( array_key_exists( 'material', $this->options ) ) {
 			$config['current'] = $this->options['material'];
 		}
 
@@ -263,16 +264,15 @@ abstract class BaseBuilder {
 	protected function makeRendererConfig() {
 		$config = [];
 
-		if (!is_null($this->frame)) {
-			$this->options['parent'] = 'w3d' . wfRandomString( 4 );
+		if ( !is_null( $this->frame ) ) {
+			$config['parent'] = 'w3d' . wfRandomString( 4 );
 		} else {
 			if ( array_key_exists( 'parent', $this->options ) ) {
 				$config['parent'] = $this->options['parent'];
 			}
 		}
 
-		if ( array_key_exists( 'resolution', $this->options ) &&
-		     in_array( $this->options['resolution'], Wiki3DConfig::RENDER_RESOLUTIONS ) ) {
+		if ( array_key_exists( 'resolution', $this->options ) ) {
 			$config['resolution'] = $this->options['resolution'];
 		}
 
@@ -287,8 +287,6 @@ abstract class BaseBuilder {
 	public function addToOutput() {
 		$output = $this->outputPage;
 
-		$output->addHTML("<div id='{$this->config['renderer']['parent']}'></div>");
-
 		if ( get_class( $output ) == 'ParserOutput' &&
 		     array_key_exists( "w3d-$this->arrayKey", $output->mJsConfigVars ) &&
 		     count( $output->mJsConfigVars["w3d-$this->arrayKey"]['configs'] ) > 0 ) {
@@ -297,7 +295,13 @@ abstract class BaseBuilder {
 			$output->addJsConfigVars( $this->baseStructure );
 		}
 
+		$this->output = "<div id='{$this->config['renderer']['parent']}'></div>";
+
 		$output->addModules( $this->modules );
+	}
+
+	public function getOutput() {
+		return $this->output;
 	}
 
 	public function setModules( array $modules ) {
