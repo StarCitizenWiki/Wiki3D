@@ -51,7 +51,7 @@ abstract class BaseSpecialPage extends SpecialPage {
 			$this->builderClass->setParser( $this );
 			$this->configureBuilder();
 			$this->builderClass->addToOutput();
-			$this->getOutput()->addHTML( $this->getControlsHtml() );
+			$this->getOutput()->addHTML( $this->makeControlHtml() );
 		}
 		catch ( InvalidArgumentException $e ) {
 			$this->getOutput()->addHTML( $this->msg( 'wiki3d-invalidArguments' ) );
@@ -108,6 +108,55 @@ abstract class BaseSpecialPage extends SpecialPage {
 	}
 
 	protected function getFileExtensionToSearch() {
+	}
+
+	private function makeControlHtml() {
+		$wrapper = <<<EOT
+<div id="w3dWrapper">
+	<button id="fullScreen" class="hidden">&nearrow;</button>
+    <div class="controls hidden" id="controls">
+    	<button id="toggleButton">></button>
+{$this->getControlsHtml()}
+        <div class="form-group-wrapper">
+            <p class="title">{$this->msg('wiki3d-camera')}</p>
+            <div class="form-group">
+                <label for="cameraFOV">{$this->msg('wiki3d-camera-fov')}</label>
+                <input type="range" class="w3d" name="cameraFOV" id="cameraFOV" min="10" max="120" 
+                value="{$this->config['camera']['fov']}">
+            </div>
+        </div> 
+        
+        <div class="form-group-wrapper">
+            <p class="title">{$this->msg('wiki3d-enviroment')}</p>
+            <div class="form-group">
+                <label for="sceneScene">{$this->msg('wiki3d-scene-selection')}</label>
+                <select id="sceneScene">
+                </select>
+            </div>
+            <div class="form-group">
+            	<label for="sceneDownload">{$this->msg('wiki3d-scene')}</label>
+                <button id="sceneDownload" class="blue">{$this->msg('wiki3d-download')}</button>
+            </div>
+        </div> 
+        
+        <div class="form-group-wrapper">
+            <p class="title">{$this->msg('wiki3d-lights')}</p>
+            <div id="lightList"></div>
+        </div>
+                
+        <div class="form-group-wrapper">
+            <p class="title">{$this->msg('wiki3d-renderer')}</p>
+            <div class="form-group">
+                <label for="resolutionSelect">{$this->msg('wiki3d-resolution')}</label>
+                <select id="resolutionSelect">
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+EOT;
+
+		return $wrapper;
 	}
 
 	protected function getGroupName() {

@@ -12,5 +12,26 @@
 	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
 	"wiki3d-fileOptionMissing": "File-Option is missing",
 	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed",
-	"specialpages-group-wiki3d": "Wiki3D"
+	"specialpages-group-wiki3d": "Wiki3D",
+
+	"wiki3d-camera": "Camera",
+	"wiki3d-camera-fov": "FOV",
+	"wiki3d-enviroment": "Enviroment",
+	"wiki3d-scene": "Scene",
+	"wiki3d-scene-selection": "Scene Selection",
+	"wiki3d-download": "Download",
+	"wiki3d-lights": "Lights",
+	"wiki3d-renderer": "Renderer",
+	"wiki3d-resolution": "Resolution",
+	"wiki3d-station": "Station",
+	"wiki3d-rotation": "Rotation",
+	"wiki3d-position": "Position",
+	"wiki3d-x-axis": "X-Axis",
+	"wiki3d-y-axis": "Y-Axis",
+	"wiki3d-z-axis": "Z-Axis",
+	"wiki3d-ship": "Ship",
+	"wiki3d-color": "Color",
+	"wiki3d-material": "Material",
+	"wiki3d-wireframe": "Wireframe",
+	"wiki3d-toggle": "Toggle"
 }
