@@ -45,7 +45,7 @@ abstract class BaseBuilder {
 		}
 		$this->setArgs( $args );
 		$this->defaultConfig = $this->getDefaultConfig();
-		$this->baseStructure = Wiki3DConfig::getBaseStructure($this->arrayKey);
+		$this->baseStructure = Wiki3DConfig::getBaseStructure( $this->arrayKey );
 	}
 
 	/**
@@ -139,6 +139,44 @@ abstract class BaseBuilder {
 	protected function makeModuleConfig() {
 	}
 
+	protected function makeRotationConfig() {
+		$config = [
+			'speed' => [],
+		];
+
+		if ( array_key_exists( 'rotation_x', $this->options ) ) {
+			$config['x'] = floatval( $this->options['rotation_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_y', $this->options ) ) {
+			$config['y'] = floatval( $this->options['rotation_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_z', $this->options ) ) {
+			$config['z'] = floatval( $this->options['rotation_z'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_x', $this->options ) ) {
+			$config['speed']['x'] = floatval( $this->options['rotation_speed_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_y', $this->options ) ) {
+			$config['speed']['y'] = floatval( $this->options['rotation_speed_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_z', $this->options ) ) {
+			$config['speed']['z'] = floatval( $this->options['rotation_speed_z'] );
+		}
+
+		if ( empty( $config['speed'] ) ) {
+			unset( $config['speed'] );
+		}
+
+		if ( !empty( $config ) ) {
+			$this->config['mainObject']['rotation'] = $config;
+		}
+	}
+
 	protected function makeMaterialConfig() {
 		$config = [];
 
@@ -225,8 +263,12 @@ abstract class BaseBuilder {
 	protected function makeRendererConfig() {
 		$config = [];
 
-		if ( array_key_exists( 'parent', $this->options ) ) {
-			$config['parent'] = $this->options['parent'];
+		if (!is_null($this->frame)) {
+			$this->options['parent'] = 'w3d' . wfRandomString( 4 );
+		} else {
+			if ( array_key_exists( 'parent', $this->options ) ) {
+				$config['parent'] = $this->options['parent'];
+			}
 		}
 
 		if ( array_key_exists( 'resolution', $this->options ) &&
@@ -239,49 +281,13 @@ abstract class BaseBuilder {
 		}
 	}
 
-	protected function makeRotationConfig() {
-		$config = [
-			'speed' => [],
-		];
-
-		if ( array_key_exists( 'rotation_x', $this->options ) ) {
-			$config['x'] = floatval( $this->options['rotation_x'] );
-		}
-
-		if ( array_key_exists( 'rotation_y', $this->options ) ) {
-			$config['y'] = floatval( $this->options['rotation_y'] );
-		}
-
-		if ( array_key_exists( 'rotation_z', $this->options ) ) {
-			$config['z'] = floatval( $this->options['rotation_z'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_x', $this->options ) ) {
-			$config['speed']['x'] = floatval( $this->options['rotation_speed_x'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_y', $this->options ) ) {
-			$config['speed']['y'] = floatval( $this->options['rotation_speed_y'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_z', $this->options ) ) {
-			$config['speed']['z'] = floatval( $this->options['rotation_speed_z'] );
-		}
-
-		if ( empty( $config['speed'] ) ) {
-			unset( $config['speed'] );
-		}
-
-		if ( !empty( $config ) ) {
-			$this->config['mainObject']['rotation'] = $config;
-		}
-	}
-
 	protected function setDefaultModules() {
 	}
 
 	public function addToOutput() {
 		$output = $this->outputPage;
+
+		$output->addHTML("<div id='{$this->config['renderer']['parent']}'></div>");
 
 		if ( get_class( $output ) == 'ParserOutput' &&
 		     array_key_exists( "w3d-$this->arrayKey", $output->mJsConfigVars ) &&

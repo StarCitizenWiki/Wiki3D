@@ -46,7 +46,6 @@
 			"scripts": [
 				"modules/threejs/three.js",
 				"modules/threejs/controls/OrbitControls.js",
-				"modules/threejs/libs/Detector.js",
 				"modules/ext.w3d.js"
 			],
 			"styles": [
@@ -55,6 +54,7 @@
 		},
 		"ext.w3d.ctm": {
 			"scripts": [
+				"modules/threejs/libs/Detector.js",
 				"modules/threejs/ctm/lzma.js",
 				"modules/threejs/ctm/ctm.js",
 				"modules/threejs/ctm/CTMLoader.js",
@@ -66,6 +66,7 @@
 		},
 		"ext.w3d.collada": {
 			"scripts": [
+				"modules/threejs/libs/Detector.js",
 				"modules/threejs/collada/ColladaLoader.js",
 				"modules/viewer/ext.w3d.ColladaViewer.js"
 			],
@@ -75,6 +76,7 @@
 		},
 		"ext.w3d.shape": {
 			"scripts": [
+				"modules/threejs/libs/Detector.js",
 				"modules/viewer/ext.w3d.ShapeViewer.js"
 			],
 			"dependencies": [
