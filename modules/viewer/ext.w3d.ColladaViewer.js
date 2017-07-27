@@ -23,6 +23,7 @@
 
 		function init() {
 			sceneGroups = mw.w3d.getSceneGroups();
+			sceneGroups[ 'default' ].getObjectByName( 'hemisphere' ).intensity = 2;
 
 			createScene();
 			createCamera();
