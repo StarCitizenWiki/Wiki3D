@@ -117,7 +117,6 @@ $( function () {
 				let color;
 
 				color = event.target.value;
-				color = color.replace( '#', '0x' );
 				viewer.changeMaterialColor( color );
 			} );
 		}

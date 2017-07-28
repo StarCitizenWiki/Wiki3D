@@ -201,9 +201,10 @@ abstract class BaseBuilder {
 			throw new InvalidArgumentException( 'wiki3d-fileNotFound' );
 		}
 
-		if ( is_array( static::FILE_EXTENSION ) &&
-		     !in_array( $file->getExtension(), static::FILE_EXTENSION ) ) {
-			throw new InvalidArgumentException( 'wiki3d-fileNotAllowed' );
+		if ( is_array( static::FILE_EXTENSION ) ) {
+			if ( !in_array( $file->getExtension(), static::FILE_EXTENSION ) ) {
+				throw new InvalidArgumentException( 'wiki3d-fileNotAllowed' );
+			}
 		} else {
 			if ( $file->getExtension() !== static::FILE_EXTENSION ) {
 				throw new InvalidArgumentException( 'wiki3d-fileNotAllowed' );
@@ -216,14 +217,8 @@ abstract class BaseBuilder {
 	protected function makeMaterialConfig() {
 		$config = [];
 
-		if ( array_key_exists( 'color', $this->options ) &&
-		     $this->checkIfValidHexColor( $this->options['color'] ) ) {
-
-			$color = $this->options['color'];
-			$color = ltrim( $color, '#' );
-
-			$config['color'] = intval( $color );
-			$config['colorHexStr'] = '#' . $color;
+		if ( array_key_exists( 'color', $this->options ) ) {
+			$config['color'] = intval( $this->options['color'] );
 		}
 
 		if ( array_key_exists( 'material', $this->options ) ) {
@@ -233,16 +228,6 @@ abstract class BaseBuilder {
 		if ( !empty( $config ) ) {
 			$this->config['material'] = $config;
 		}
-	}
-
-	private function checkIfValidHexColor( $color ) {
-		$color = ltrim( $color, '#' );
-
-		if ( ctype_xdigit( $color ) && ( strlen( $color ) === 6 || strlen( $color ) === 3 ) ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	protected function makeCameraConfig() {

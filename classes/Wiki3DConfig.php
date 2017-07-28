@@ -57,8 +57,7 @@ class Wiki3DConfig {
 				],
 			],
 			'material' => [
-				'color' => 0x32c6ff,
-				'colorHexStr' => '#32c6ff',
+				'color' => '#32c6ff',
 				'current' => 'default',
 			],
 			'scene' => [
@@ -91,7 +90,7 @@ class Wiki3DConfig {
 			'renderer' => [
 				'parent' => 'mw-content-text',
 				'resolution' => 'hd',
-				'clearColor' => 0x000000,
+				'clearColor' => '#000000',
 				'opacity' => 0,
 			],
 		];

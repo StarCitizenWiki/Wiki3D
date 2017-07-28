@@ -146,7 +146,7 @@
 					config.mainObject.rotation.y,
 					config.mainObject.rotation.z
 				);
-				mainObject.material.color.setHex( config.material.color );
+				mainObject.material.color.set( config.material.color );
 
 				normalizeMainObjectSize();
 			}
@@ -174,7 +174,7 @@
 
 		function updateMaterialColor() {
 			if ( typeof mainObject.material.color !== 'undefined' ) {
-				mainObject.material.color.setHex( config.material.color );
+				mainObject.material.color.set( config.material.color );
 			}
 		}
 
