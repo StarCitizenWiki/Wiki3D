@@ -148,11 +148,20 @@
 			}
 
 			function normalizeMainObjectSize() {
-				let box, scale;
+				let box, scale, scaleX, scaleY, scaleZ;
 
 				box = new THREE.Box3().setFromObject( mainObject );
+				scale = box.getSize().x / config.mainObject.defaultSize;
+				scaleX = 1 / scale;
+
+				scale = box.getSize().y / config.mainObject.defaultSize;
+				scaleY = 1 / scale;
+
 				scale = box.getSize().z / config.mainObject.defaultSize;
-				scale = 1 / scale;
+				scaleZ = 1 / scale;
+
+				scale = Math.min( scaleX, scaleY, scaleZ );
+
 				mainObject.scale.set( scale, scale, scale );
 
 				start();
