@@ -11,7 +11,8 @@
 	"wiki3d-stationviewer": "{{SITENAME}} Station Viewer",
 	"wiki3d-unknownClass": "Class type not found in BuilderFactory",
 	"wiki3d-fileOptionMissing": "File-Option is missing",
-	"wiki3d-fileNotFoundOrWrongType": "File not found or extension not allowed",
+	"wiki3d-fileNotFound": "File not found",
+	"wiki3d-fileNotAllowed": "File not allowed",
 	"specialpages-group-wiki3d": "Wiki3D",
 
 	"wiki3d-camera": "Camera",

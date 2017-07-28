@@ -197,8 +197,17 @@ abstract class BaseBuilder {
 		}
 
 		$file = wfFindFile( $this->options['file'] );
-		if ( $file === false || $file->getExtension() !== static::FILE_EXTENSION ) {
-			throw new InvalidArgumentException( 'wiki3d-fileNotFoundOrWrongType' );
+		if ( $file === false ) {
+			throw new InvalidArgumentException( 'wiki3d-fileNotFound' );
+		}
+
+		if ( is_array( static::FILE_EXTENSION ) &&
+		     !in_array( $file->getExtension(), static::FILE_EXTENSION ) ) {
+			throw new InvalidArgumentException( 'wiki3d-fileNotAllowed' );
+		} else {
+			if ( $file->getExtension() !== static::FILE_EXTENSION ) {
+				throw new InvalidArgumentException( 'wiki3d-fileNotAllowed' );
+			}
 		}
 
 		$this->config['mainObject']['path'] = $file->getFullUrl();
