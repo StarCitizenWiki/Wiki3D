@@ -1,8 +1,8 @@
 'use strict';
 $( function () {
-	let ctmViewer;
+	let viewer, config;
 
-	if ( mw.config.get( 'w3d-ctm' ) !== null ) {
+	if ( mw.config.get( 'w3d-ctm' ) !== null || mw.config.get( 'w3d-collada' ) ) {
 		let controls, button;
 
 		controls = document.getElementById( 'controls' );
@@ -10,7 +10,12 @@ $( function () {
 		button = document.getElementById( 'fullScreen' );
 		button.classList.remove( 'hidden' );
 
-		ctmViewer = mw.config.get( 'w3d-ctm' ).viewers[ 0 ];
+		if ( mw.config.get( 'w3d-ctm' ) !== null ) {
+			config = mw.config.get( 'w3d-ctm' );
+		} else {
+			config = mw.config.get( 'w3d-collada' );
+		}
+		viewer = config.viewers[ 0 ];
 		addEventListener();
 		addLightList();
 		addSceneList();
@@ -32,7 +37,6 @@ $( function () {
 				button.innerHTML = '&times;';
 			}
 		} );
-
 		document.getElementById( 'fullScreen' ).addEventListener( 'click', function () {
 			let wrapper, button;
 
@@ -48,120 +52,129 @@ $( function () {
 			}
 		} );
 
-		document.getElementById( 'shipWireframe' ).addEventListener( 'click', function ( event ) {
-			let target;
-
-			target = event.target;
-			if ( target.className.indexOf( 'red' ) > -1 ) {
-				target.classList.remove( 'red' );
-				target.classList.add( 'green' );
-			} else {
-				target.classList.add( 'red' );
-				target.classList.remove( 'green' );
-			}
-			ctmViewer.toggleWireFrame();
-		} );
-		document.getElementById( 'shipRotationX' ).addEventListener( 'input', changeRotation );
-		document.getElementById( 'shipRotationY' ).addEventListener( 'input', changeRotation );
-		document.getElementById( 'shipRotationZ' ).addEventListener( 'input', changeRotation );
-		document.getElementById( 'shipPositionX' ).addEventListener( 'input', changePosition );
-		document.getElementById( 'shipPositionY' ).addEventListener( 'input', changePosition );
-		document.getElementById( 'shipPositionZ' ).addEventListener( 'input', changePosition );
-
-		document.getElementById( 'shipColor' ).addEventListener( 'change', function ( event ) {
-			let color;
-
-			color = event.target.value;
-			color = color.replace( '#', '0x' );
-			ctmViewer.changeMaterialColor( color );
-		} );
-
+		document.getElementById( 'rotationX' ).addEventListener( 'input', changeRotation );
+		document.getElementById( 'rotationY' ).addEventListener( 'input', changeRotation );
+		document.getElementById( 'rotationZ' ).addEventListener( 'input', changeRotation );
+		document.getElementById( 'positionX' ).addEventListener( 'input', changePosition );
+		document.getElementById( 'positionY' ).addEventListener( 'input', changePosition );
+		document.getElementById( 'positionZ' ).addEventListener( 'input', changePosition );
 		document.getElementById( 'sceneScene' ).addEventListener( 'change', function ( event ) {
 			let select, selected;
 
 			select = event.target;
 			selected = select.options[ select.selectedIndex ].value;
 
-			ctmViewer.changeScene( selected );
+			viewer.changeScene( selected );
 			addLightList();
 		} );
-
-		document.getElementById( 'shipMaterial' ).addEventListener( 'change', function ( event ) {
-			let select, selected;
-
-			select = event.target;
-			selected = select.options[ select.selectedIndex ].value;
-
-			ctmViewer.changeMaterial( selected );
-		} );
-
 		document.getElementById( 'cameraFOV' ).addEventListener( 'input', function ( event ) {
-			ctmViewer.changeCameraFOV( event.target.value );
+			viewer.changeCameraFOV( event.target.value );
 		} );
-
 		document.getElementById( 'resolutionSelect' ).addEventListener( 'input', function ( event ) {
 			let select, selected;
 
 			select = event.target;
 			selected = select.options[ select.selectedIndex ].value;
 
-			ctmViewer.changeRenderResolution( selected );
+			viewer.changeRenderResolution( selected );
 		} );
-
 		document.getElementById( 'sceneDownload' ).addEventListener( 'click', function () {
-			ctmViewer.downloadImage();
+			viewer.downloadImage();
 		} );
 
+		/**
+		 * CTM Related Stuff
+		 */
+		if ( document.getElementById( 'wireframe' ) !== null ) {
+			document.getElementById( 'wireframe' ).addEventListener( 'click', function ( event ) {
+				let target;
+
+				target = event.target;
+				if ( target.className.indexOf( 'red' ) > -1 ) {
+					target.classList.remove( 'red' );
+					target.classList.add( 'green' );
+				} else {
+					target.classList.add( 'red' );
+					target.classList.remove( 'green' );
+				}
+				viewer.toggleWireFrame();
+			} );
+		}
+
+		if ( document.getElementById( 'material' ) !== null ) {
+			document.getElementById( 'material' ).addEventListener( 'change', function ( event ) {
+				let select, selected;
+
+				select = event.target;
+				selected = select.options[ select.selectedIndex ].value;
+
+				viewer.changeMaterial( selected );
+			} );
+		}
+
+		if ( document.getElementById( 'color' ) !== null ) {
+			document.getElementById( 'color' ).addEventListener( 'change', function ( event ) {
+				let color;
+
+				color = event.target.value;
+				color = color.replace( '#', '0x' );
+				viewer.changeMaterialColor( color );
+			} );
+		}
 	}
 
 	function changeRotation( event ) {
-		let update = {
+		let update;
+
+		update = {
 			target: '',
 			value: event.target.value
 		};
 
 		switch ( event.target.id ) {
-			case 'shipRotationX':
+			case 'rotationX':
 				update.target = 'x';
 				break;
 
-			case 'shipRotationY':
+			case 'rotationY':
 				update.target = 'y';
 				break;
 
-			case 'shipRotationZ':
+			case 'rotationZ':
 				update.target = 'z';
 				break;
 
 			default:
 				break;
 		}
-		ctmViewer.updateMainObject( 'rotation', update );
+		viewer.updateMainObject( 'rotation', update );
 	}
 
 	function changePosition( event ) {
-		let update = {
+		let update;
+
+		update = {
 			target: '',
 			value: event.target.value
 		};
 
 		switch ( event.target.id ) {
-			case 'shipPositionX':
+			case 'positionX':
 				update.target = 'x';
 				break;
 
-			case 'shipPositionY':
+			case 'positionY':
 				update.target = 'y';
 				break;
 
-			case 'shipPositionZ':
+			case 'positionZ':
 				update.target = 'z';
 				break;
 
 			default:
 				break;
 		}
-		ctmViewer.updateMainObject( 'position', update );
+		viewer.updateMainObject( 'position', update );
 	}
 
 	function addLightList() {
@@ -170,7 +183,7 @@ $( function () {
 		listElement = document.getElementById( 'lightList' );
 		listElement.innerHTML = '';
 
-		lightList = ctmViewer.getLightList();
+		lightList = viewer.getLightList();
 
 		for ( let i = 0; i < lightList.length; i++ ) {
 			let html;
@@ -209,7 +222,7 @@ $( function () {
 
 		renderResolutionList = mw.w3d.getResolutions();
 		listElement = document.getElementById( 'resolutionSelect' );
-		currentResolution = mw.config.get( 'w3d-ctm' ).configs[ 0 ].renderer.resolution;
+		currentResolution = config.configs[ 0 ].renderer.resolution;
 
 		for ( let name in renderResolutionList ) {
 			let optionElement;
@@ -239,7 +252,7 @@ $( function () {
 			target.classList.remove( 'green' );
 		}
 
-		ctmViewer.toggleLight( event.target.id );
+		viewer.toggleLight( event.target.id );
 	}
 
 } );
