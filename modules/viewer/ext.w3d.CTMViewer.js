@@ -22,6 +22,10 @@
 			init();
 		}
 
+		this.getScenes = function () {
+			return sceneGroups();
+		};
+
 		function init() {
 			sceneGroups = mw.w3d.getSceneGroups();
 			sceneGroups[ 'default' ].getObjectByName( 'hemisphere' ).intensity = 0.2;

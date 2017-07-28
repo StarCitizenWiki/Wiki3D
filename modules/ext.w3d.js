@@ -63,7 +63,7 @@
 							color: 0xffffff,
 							intensity: 0.9
 						},
-						position: { x: 0, y: 1, z: 0 }
+						position: { x: 0, y: 300, z: 0 }
 					},
 					{
 						type: 'directional',
@@ -73,7 +73,7 @@
 							color: 0xffffff,
 							intensity: 0.9
 						},
-						position: { x: 0, y: -1, z: 0 }
+						position: { x: 0, y: -300, z: 0 }
 					}
 				]
 			}/*,
@@ -117,7 +117,7 @@
 						config: {
 							color: 0xffffff
 						},
-						position: { x: 0, y: 1, z: 0 }
+						position: { x: 0, y: 300, z: 0 }
 					},
 					{
 						type: 'directional',
@@ -127,7 +127,7 @@
 							color: 0xffffff,
 							intensity: 0.4
 						},
-						position: { x: 1, y: 0, z: 0 }
+						position: { x: 0, y: 0, z: 1000 }
 					}
 				]
 			},
@@ -137,12 +137,8 @@
 					{
 						name: 'background',
 						geometry: {
-							type: 'sphere',
-							config: {
-								radius: 10000,
-								widthSegments: 25,
-								heightSegments: 25
-							}
+							type: 'TorusKnotBufferGeometry',
+							config: {}
 						},
 						material: {
 							type: 'phong',
@@ -170,7 +166,7 @@
 						config: {
 							color: 0xffffff
 						},
-						position: { x: 0, y: 1, z: 0 }
+						position: { x: 0, y: 300, z: 0 }
 					},
 					{
 						type: 'directional',
@@ -180,7 +176,7 @@
 							color: 0xffffff,
 							intensity: 0.4
 						},
-						position: { x: 1, y: 0, z: 0 }
+						position: { x: 300, y: 0, z: 0 }
 					}
 				]
 			}*/
@@ -263,6 +259,7 @@
 
 					lightData = SCENES[ i ].lights[ j ];
 					light = mw.w3d.lightFactory( lightData.type, lightData.config );
+
 					if ( 'position' in lightData ) {
 						light.position.set(
 							lightData.position.x,
@@ -271,6 +268,12 @@
 						);
 					}
 					light.name = lightData.name || '';
+
+					if ( lightData.type === 'directional' ) {
+						let helper = new THREE.DirectionalLightHelper( light, 6 );
+						helper.visible = 0;
+						group.add( helper );
+					}
 
 					lightList.push( {
 						uuid: light.uuid,
