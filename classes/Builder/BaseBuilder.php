@@ -7,13 +7,20 @@
 
 namespace Wiki3D\Builder;
 
-use OutputPage, ParserOutput, PPFrame, Parser, SpecialPage;
+use InvalidArgumentException;
+use BadMethodCallException;
+use OutputPage;
+use Parser;
+use ParserOutput;
+use PPFrame;
+use SpecialPage;
 use Wiki3D\Wiki3DConfig;
 
 
 abstract class BaseBuilder {
+	public const FILE_EXTENSION = '';
 
-	protected $arrayKey = '';
+	protected $configID = '';
 
 	/**
 	 * @var OutputPage | ParserOutput
@@ -25,8 +32,8 @@ abstract class BaseBuilder {
 	protected $frame;
 	protected $options;
 
-	protected $baseStructure;
-	protected $defaultConfig;
+	protected $configStructure;
+	protected $moduleConfig;
 	protected $config;
 	protected $modules;
 
@@ -40,48 +47,90 @@ abstract class BaseBuilder {
 	 * @param PPFrame|null $frame
 	 * @param null $args
 	 */
-	public function __construct( &$parser = null, $frame = null, $args = null ) {
-		$this->setParser( $parser );
+	public function __construct( &$parser, $frame = null, $args = null ) {
+		$this->setParserOutput( $parser );
 		if ( !is_null( $frame ) ) {
 			$this->setFrame( $frame );
 		}
 		$this->setArgs( $args );
-		$this->defaultConfig = $this->getDefaultConfig();
-		$this->baseStructure = Wiki3DConfig::getBaseStructure( $this->arrayKey );
+		$this->moduleConfig = $this->getDefaultModuleConfig();
+		$this->configStructure = Wiki3DConfig::getConfigStructure( $this->configID );
 	}
 
 	/**
+	 * Calls getOutput() from the provided parser and sets it to $this->outputPage
+	 *
 	 * @param Parser|SpecialPage $parser
+	 * @throws InvalidArgumentException
 	 */
-	public function setParser( &$parser ) {
-		if ( !is_null( $parser ) ) {
-			$this->outputPage = $parser->getOutput();
+	public function setParserOutput( &$parser ) {
+		if ( !method_exists( $parser, 'getOutput' ) ) {
+			throw new InvalidArgumentException( 'getOutput not found in ' . get_class( $parser ) );
 		}
+		$this->outputPage = $parser->getOutput();
 	}
 
+	/**
+	 * Sets the PPFrame to use, should only be called if constructor was only with parser arg called
+	 *
+	 * @param PPFrame $frame
+	 */
 	public function setFrame( PPFrame $frame ) {
 		$this->frame = $frame;
 	}
 
+	/**
+	 * Array if called from ParserHook, Null if used outside Parser
+	 *
+	 * @param array|null $args
+	 */
 	public function setArgs( $args ) {
 		if ( !is_null( $args ) ) {
 			$this->options = $args;
 		}
 	}
 
-	protected function getDefaultConfig() {
-		return null;
+	/**
+	 * Default config for Module (Ctm, Collada, Shape) from Wiki3DConfig
+	 *
+	 * @return array
+	 */
+	protected function getDefaultModuleConfig() {
+		throw new BadMethodCallException( __FUNCTION__ .
+		                                  ' needs to be overwritten in extending class' );
 	}
 
-	public function addPrebuildOptions( array $options ) {
-		$this->options = $options;
-		$this->hasPrebuildOptions = true;
+	/**
+	 * Only used if not ParserHook Call
+	 *
+	 * @param array $modules
+	 */
+	public function setModules( array $modules ) {
+		$this->modules = $modules;
 	}
 
+	/**
+	 * Returns generated config
+	 *
+	 * @return mixed
+	 */
 	public function getConfig() {
 		return $this->config;
 	}
 
+	/**
+	 * Returns the wrapper div which is needed by JS to add the renderDOM
+	 *
+	 * @return mixed
+	 */
+	public function getWrapperElement() {
+		return $this->output;
+	}
+
+	/**
+	 * Makes the config and sets modules
+	 * if prebuild options are set option parsing and extracting is skipped
+	 */
 	public function build() {
 		if ( !$this->hasPrebuildOptions ) {
 			$this->parseOptions();
@@ -126,57 +175,33 @@ abstract class BaseBuilder {
 		$this->options = $results;
 	}
 
+	/**
+	 * calls all config methods, merges it with default config
+	 */
 	private function makeConfig() {
-		$this->makeModuleConfig();
-		$this->makeRotationConfig();
+		$this->setMainObjectFile();
 		$this->makeMaterialConfig();
 		$this->makeCameraConfig();
 		$this->makeControlsConfig();
 		$this->makeRendererConfig();
+		$this->makeMainObjectConfig();
+		$this->makeMainObjectRotationConfig();
 
-		$this->config = array_replace_recursive( $this->defaultConfig, $this->config );
-		$this->baseStructure["w3d-$this->arrayKey"]['configs'][] = $this->config;
+		$this->config = array_replace_recursive( $this->moduleConfig, $this->config );
+		$this->configStructure["w3d-$this->configID"]['configs'][] = $this->config;
 	}
 
-	protected function makeModuleConfig() {
-	}
-
-	protected function makeRotationConfig() {
-		$config = [
-			'speed' => [],
-		];
-
-		if ( array_key_exists( 'rotation_x', $this->options ) ) {
-			$config['x'] = floatval( $this->options['rotation_x'] );
+	private function setMainObjectFile() {
+		if ( !array_key_exists( 'file', $this->options ) ) {
+			throw new InvalidArgumentException( 'wiki3d-fileOptionMissing' );
 		}
 
-		if ( array_key_exists( 'rotation_y', $this->options ) ) {
-			$config['y'] = floatval( $this->options['rotation_y'] );
+		$file = wfFindFile( $this->options['file'] );
+		if ( $file === false || $file->getExtension() !== static::FILE_EXTENSION ) {
+			throw new InvalidArgumentException( 'wiki3d-fileNotFoundOrWrongType' );
 		}
 
-		if ( array_key_exists( 'rotation_z', $this->options ) ) {
-			$config['z'] = floatval( $this->options['rotation_z'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_x', $this->options ) ) {
-			$config['speed']['x'] = floatval( $this->options['rotation_speed_x'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_y', $this->options ) ) {
-			$config['speed']['y'] = floatval( $this->options['rotation_speed_y'] );
-		}
-
-		if ( array_key_exists( 'rotation_speed_z', $this->options ) ) {
-			$config['speed']['z'] = floatval( $this->options['rotation_speed_z'] );
-		}
-
-		if ( empty( $config['speed'] ) ) {
-			unset( $config['speed'] );
-		}
-
-		if ( !empty( $config ) ) {
-			$this->config['mainObject']['rotation'] = $config;
-		}
+		$this->config['mainObject']['path'] = $file->getFullUrl();
 	}
 
 	protected function makeMaterialConfig() {
@@ -254,6 +279,30 @@ abstract class BaseBuilder {
 
 		if ( array_key_exists( 'controls', $this->options ) ) {
 			$config['enable'] = true;
+			$config['enableZoom'] = true;
+			$config['enablePan'] = true;
+			$config['enableRotate'] = true;
+			$config['enableDamping'] = true;
+		}
+
+		if ( array_key_exists( 'controls_rotate', $this->options ) ) {
+			$config['enable'] = true;
+			$config['enableRotate'] = true;
+		}
+
+		if ( array_key_exists( 'controls_zoom', $this->options ) ) {
+			$config['enable'] = true;
+			$config['enableZoom'] = true;
+		}
+
+		if ( array_key_exists( 'controls_zoom_rotate', $this->options ) ) {
+			$config['enable'] = true;
+			$config['enableZoom'] = true;
+			$config['enableRotate'] = true;
+		}
+
+		if ( array_key_exists( 'rotateSpeed', $this->options ) ) {
+			$config['rotateSpeed'] = floatval( $this->options['rotateSpeed'] );
 		}
 
 		if ( !empty( $config ) ) {
@@ -262,7 +311,10 @@ abstract class BaseBuilder {
 	}
 
 	protected function makeRendererConfig() {
-		$config = [];
+		$config = [
+			'resolution' => 'sd',
+			'parent' => 'w3dWrapper',
+		];
 
 		if ( !is_null( $this->frame ) ) {
 			$config['parent'] = 'w3d' . wfRandomString( 4 );
@@ -277,9 +329,10 @@ abstract class BaseBuilder {
 		}
 
 		if ( array_key_exists( 'clear_color', $this->options ) ) {
-
-			$config['clearColor'] = 'white';
-			$config['opacity'] = 1;
+			$config['clearColor'] = $this->options['clear_color'];
+			if ( array_key_exists( 'background_opacity', $this->options ) ) {
+				$config['opacity'] = floatval( $this->options['background_opacity'] );
+			}
 		}
 
 		if ( !empty( $config ) ) {
@@ -287,30 +340,77 @@ abstract class BaseBuilder {
 		}
 	}
 
+	protected function makeMainObjectConfig() {
+	}
+
+	protected function makeMainObjectRotationConfig() {
+		$config = [
+			'speed' => [],
+		];
+
+		if ( array_key_exists( 'rotation_x', $this->options ) ) {
+			$config['x'] = floatval( $this->options['rotation_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_y', $this->options ) ) {
+			$config['y'] = floatval( $this->options['rotation_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_z', $this->options ) ) {
+			$config['z'] = floatval( $this->options['rotation_z'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_x', $this->options ) ) {
+			$config['speed']['x'] = floatval( $this->options['rotation_speed_x'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_y', $this->options ) ) {
+			$config['speed']['y'] = floatval( $this->options['rotation_speed_y'] );
+		}
+
+		if ( array_key_exists( 'rotation_speed_z', $this->options ) ) {
+			$config['speed']['z'] = floatval( $this->options['rotation_speed_z'] );
+		}
+
+		if ( empty( $config['speed'] ) ) {
+			unset( $config['speed'] );
+		}
+
+		if ( !empty( $config ) ) {
+			$this->config['mainObject']['rotation'] = $config;
+		}
+	}
+
 	protected function setDefaultModules() {
 	}
 
+	/**
+	 * Should only be called if outside ParserHook
+	 *
+	 * @param array $options
+	 */
+	public function addPrebuildOptions( array $options ) {
+		$this->options = $options;
+		$this->hasPrebuildOptions = true;
+	}
+
+	/**
+	 * Adds JsConfig Vars, modules to output and generates div hook element
+	 */
 	public function addToOutput() {
 		$output = $this->outputPage;
 
 		if ( get_class( $output ) == 'ParserOutput' &&
-		     array_key_exists( "w3d-$this->arrayKey", $output->mJsConfigVars ) &&
-		     count( $output->mJsConfigVars["w3d-$this->arrayKey"]['configs'] ) > 0 ) {
-			$output->mJsConfigVars["w3d-$this->arrayKey"]['configs'][] = $this->config;
+		     array_key_exists( "w3d-$this->configID", $output->mJsConfigVars ) &&
+		     count( $output->mJsConfigVars["w3d-$this->configID"]['configs'] ) > 0 ) {
+			$output->mJsConfigVars["w3d-$this->configID"]['configs'][] = $this->config;
 		} else {
-			$output->addJsConfigVars( $this->baseStructure );
+			$output->addJsConfigVars( $this->configStructure );
 		}
 
-		$this->output = "<div id='{$this->config['renderer']['parent']}' class='w3d-wrapper'></div>";
+		$this->output =
+			"<div id='{$this->config['renderer']['parent']}' class='w3d-wrapper'></div>";
 
 		$output->addModules( $this->modules );
-	}
-
-	public function getOutput() {
-		return $this->output;
-	}
-
-	public function setModules( array $modules ) {
-		$this->modules = $modules;
 	}
 }

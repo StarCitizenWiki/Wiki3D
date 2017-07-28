@@ -7,13 +7,13 @@
 
 namespace Wiki3D\Builder;
 
-use InvalidArgumentException;
 use Wiki3D\Wiki3DConfig;
 
+/** @TODO: Shape config ist derzeit nur Sphere */
 class ShapeBuilder extends BaseBuilder {
 	public const FILE_EXTENSION = [ 'jpg', 'png' ];
 
-	protected $arrayKey = 'shape';
+	protected $configID = 'shape';
 
 	protected function setDefaultModules() {
 		$this->modules = [
@@ -23,27 +23,14 @@ class ShapeBuilder extends BaseBuilder {
 		];
 	}
 
-	protected function getDefaultConfig() {
+	protected function getDefaultModuleConfig() {
 		$config = Wiki3DConfig::getDefaultShapeConfig();
-		$config['renderer']['resolution'] = 'sd';
-		$config['renderer']['parent'] = 'w3dWrapper';
 
 		return $config;
 	}
 
-	protected function makeModuleConfig() {
-		if ( !array_key_exists( 'file', $this->options ) ) {
-			throw new InvalidArgumentException( 'wiki3d-fileOptionMissing' );
-		}
-
-		$file = wfFindFile( $this->options['file'] );
-		if ( $file === false || !in_array( $file->getExtension(), self::FILE_EXTENSION ) ) {
-			throw new InvalidArgumentException( 'wiki3d-fileNotFoundOrWrongType' );
-		}
-
+	protected function makeMainObjectConfig() {
 		$config = [];
-
-		$config['path'] = $file->getFullUrl();
 
 		if ( array_key_exists( 'scale', $this->options ) ) {
 			$config['scale'] = floatval( $this->options['scale'] );

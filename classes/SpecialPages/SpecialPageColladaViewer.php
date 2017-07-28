@@ -36,7 +36,7 @@ class SpecialPageColladaViewer extends BaseSpecialPage {
 		return [
 			'ext.w3d.threejs',
 			'ext.w3d.collada',
-			'ext.w3d.specials.colladaviewer',
+			'ext.w3d.specialpage',
 		];
 	}
 
@@ -47,33 +47,33 @@ class SpecialPageColladaViewer extends BaseSpecialPage {
 <div class="form-group-wrapper">
     <p class="title">{$this->msg('wiki3d-station')}</p>
 
-    <p class="title">{$this->msg('wiki3d-rotation')}</p>
+    <p class="title">{$this->msg( 'wiki3d-rotation' )}</p>
     <div class="form-group">
-        <label for="shipRotationX">{$this->msg('wiki3d-x-axis')}</label>
-        <input type="number" name="shipRotationX" id="shipRotationX" value="0" step="0.05">
+        <label for="rotationX">{$this->msg( 'wiki3d-x-axis' )}</label>
+        <input type="number" name="rotationX" id="rotationX" value="0" step="0.05">
     </div>
     <div class="form-group">
-        <label for="shipRotationY">{$this->msg('wiki3d-y-axis')}</label>
-        <input type="number" name="shipRotationY" id="shipRotationY" value="{$piHalf}" step="0.05">
+        <label for="rotationY">{$this->msg( 'wiki3d-y-axis' )}</label>
+        <input type="number" name="rotationY" id="rotationY" value="{$piHalf}" step="0.05">
     </div>
     <div class="form-group">
-        <label for="shipRotationZ">{$this->msg('wiki3d-z-axis')}</label>
-        <input type="number" name="shipRotationZ" id="shipRotationZ" value="0" step="0.05">
+        <label for="rotationZ">{$this->msg( 'wiki3d-z-axis' )}</label>
+        <input type="number" name="rotationZ" id="rotationZ" value="0" step="0.05">
     </div>
     
-    <p class="title">{$this->msg('wiki3d-position')}</p>
+    <p class="title">{$this->msg( 'wiki3d-position' )}</p>
     <div class="form-group">
-        <label for="shipPositionX">{$this->msg('wiki3d-x-axis')}</label>
-        <input type="number" name="shipPositionX" id="shipPositionX" value="0" step="5">
+        <label for="positionX">{$this->msg( 'wiki3d-x-axis' )}</label>
+        <input type="number" name="positionX" id="positionX" value="0" step="5">
     </div>
     <div class="form-group">
-        <label for="shipPositionY">{$this->msg('wiki3d-y-axis')}</label>
-        <input type="number" name="shipPositionY" id="shipPositionY" value="0" step="5">
+        <label for="positionY">{$this->msg( 'wiki3d-y-axis' )}</label>
+        <input type="number" name="positionY" id="positionY" value="0" step="5">
     </div>
     <div class="form-group">
-        <label for="shipPositionZ">{$this->msg('wiki3d-z-axis')}</label>
-        <input type="number" name="shipPositionZ" id="shipPositionZ" value="0" step="5">
-    </div>                    
+        <label for="positionZ">{$this->msg( 'wiki3d-z-axis' )}</label>
+        <input type="number" name="positionZ" id="positionZ" value="0" step="5">
+    </div>                 
 </div>
 EOT;
 	}

@@ -7,13 +7,18 @@
 
 namespace Wiki3D\Builder;
 
-use InvalidArgumentException;
 use Wiki3D\Wiki3DConfig;
 
 class ColladaBuilder extends BaseBuilder {
 	public const FILE_EXTENSION = 'dae';
 
-	protected $arrayKey = 'collada';
+	protected $configID = 'collada';
+
+	protected function getDefaultModuleConfig() {
+		$config = Wiki3DConfig::getDefaultColladaConfig();
+
+		return $config;
+	}
 
 	protected function setDefaultModules() {
 		$this->modules = [
@@ -23,27 +28,8 @@ class ColladaBuilder extends BaseBuilder {
 		];
 	}
 
-	protected function getDefaultConfig() {
-		$config = Wiki3DConfig::getDefaultColladaConfig();
-		$config['renderer']['resolution'] = 'sd';
-		$config['renderer']['parent'] = 'w3dWrapper';
-
-		return $config;
-	}
-
-	protected function makeModuleConfig() {
-		if ( !array_key_exists( 'file', $this->options ) ) {
-			throw new InvalidArgumentException( 'wiki3d-fileOptionMissing' );
-		}
-
-		$file = wfFindFile( $this->options['file'] );
-		if ( $file === false || $file->getExtension() !== self::FILE_EXTENSION ) {
-			throw new InvalidArgumentException( 'wiki3d-fileNotFoundOrWrongType' );
-		}
-
+	protected function makeMainObjectConfig() {
 		$config = [];
-
-		$config['path'] = $file->getFullUrl();
 
 		if ( array_key_exists( 'scale', $this->options ) ) {
 			$config['scale'] = floatval( $this->options['scale'] );

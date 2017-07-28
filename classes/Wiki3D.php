@@ -35,7 +35,7 @@ class Wiki3D {
 		try {
 			$builder->build();
 			$builder->addToOutput();
-			return $builder->getOutput();
+			return $builder->getWrapperElement();
 		}
 		catch ( InvalidArgumentException $e ) {
 			return wfMessage( $e->getMessage() );

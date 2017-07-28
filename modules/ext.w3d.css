@@ -5,3 +5,9 @@ canvas.has-controls {
 table .w3d-wrapper {
     margin-bottom: -6px;
 }
+
+#w3dWrapper progress {
+    /*width: 200px;*/
+    display: block;
+    margin: 100px auto 100px;
+}

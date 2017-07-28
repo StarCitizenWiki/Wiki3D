@@ -99,34 +99,18 @@
 				"desktop"
 			]
 		},
-		"ext.w3d.specials.shipviewer": {
+		"ext.w3d.specialpage": {
 			"scripts": [
-				"modules/viewer/ext.w3d.viewloader.js",
-				"modules/specials/ext.w3d.shipviewer.js"
+				"modules/specials/ext.w3d.specialpage.js"
 			],
 			"styles": [
-				"modules/specials/ext.w3d.shipviewer.css"
+				"modules/specials/ext.w3d.specialpage.css"
 			],
 			"dependencies": [
 				"ext.w3d.threejs",
-				"ext.w3d.ctm"
-			],
-			"targets": [
-				"mobile",
-				"desktop"
-			]
-		},
-		"ext.w3d.specials.colladaviewer": {
-			"scripts": [
-				"modules/viewer/ext.w3d.viewloader.js",
-				"modules/specials/ext.w3d.colladaviewer.js"
-			],
-			"styles": [
-				"modules/specials/ext.w3d.shipviewer.css"
-			],
-			"dependencies": [
-				"ext.w3d.threejs",
-				"ext.w3d.collada"
+				"ext.w3d.ctm",
+				"ext.w3d.collada",
+				"ext.w3d.viewloader"
 			],
 			"targets": [
 				"mobile",

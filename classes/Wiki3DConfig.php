@@ -26,7 +26,7 @@ class Wiki3DConfig {
 		'flat',
 	];
 
-	public static function getBaseStructure( $type ) {
+	public static function getConfigStructure( string $type ) {
 
 		return [
 			"w3d-$type" => [
@@ -76,11 +76,11 @@ class Wiki3DConfig {
 			],
 			'controls' => [
 				'enable' => false,
-				'enableZoom' => true,
+				'enableZoom' => false,
 				'enableKeys' => false,
-				'enablePan' => true,
-				'enableRotate' => true,
-				'enableDamping' => true,
+				'enablePan' => false,
+				'enableRotate' => false,
+				'enableDamping' => false,
 				'dampingFactor' => 0.25,
 				'zoomSpeed' => 1,
 				'rotateSpeed' => 0.1,
