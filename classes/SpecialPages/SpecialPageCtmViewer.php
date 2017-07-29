@@ -82,16 +82,16 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
     <p class="title">{$this->msg( 'wiki3d-position' )}</p>
     <div class="form-group">
         <label for="positionX">{$this->msg( 'wiki3d-x-axis' )}</label>
-        <input type="number" name="positionX" id="positionX" value="0" step="1">
+        <input type="number" name="positionX" id="positionX" value="0" step="0.05">
     </div>
     <div class="form-group">
         <label for="positionY">{$this->msg( 'wiki3d-y-axis' )}</label>
-        <input type="number" name="positionY" id="positionY" value="0" step="1">
+        <input type="number" name="positionY" id="positionY" value="0" step="0.05">
     </div>
     <div class="form-group">
         <label for="positionZ">{$this->msg( 'wiki3d-z-axis' )}</label>
-        <input type="number" name="positionZ" id="positionZ" value="0" step="1">
-    </div>                  
+        <input type="number" name="positionZ" id="positionZ" value="0" step="0.05">
+    </div>                      
 </div>
 EOT;
 	}

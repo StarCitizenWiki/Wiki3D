@@ -191,9 +191,9 @@
 				scale = Math.min( scaleX, scaleY, scaleZ );
 
 				objectSize = {
-					x: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleX ),
-					y: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleY ),
-					z: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleZ )
+					x: config.mainObject.defaultSize + ( 1 / scaleX ),
+					y: config.mainObject.defaultSize + ( 1 / scaleY ),
+					z: config.mainObject.defaultSize + ( 1 / scaleZ )
 				};
 
 				mainObject.scale.set( scale, scale, scale );

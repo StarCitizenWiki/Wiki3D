@@ -99,7 +99,7 @@ class Wiki3DConfig {
 	public static function getDefaultColladaConfig() {
 		$config = self::getDefaultConfig();
 
-		$config['camera']['position']['y'] = 25;
+		$config['camera']['position']['y'] = 2;
 
 		return $config;
 	}
