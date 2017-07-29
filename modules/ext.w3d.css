@@ -2,6 +2,7 @@ canvas.has-controls {
     cursor: pointer;
 }
 
+.w3d-wrapper,
 #w3dWrapper {
     font-size: 0;
 }

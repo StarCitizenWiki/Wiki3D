@@ -299,8 +299,8 @@
 			}
 		};
 
-		this.changeRenderBackgroundColor = function ( color ) {
-			renderObject.setClearColor( color, 1 );
+		this.changeRenderBackgroundColor = function ( color, opacity ) {
+			renderObject.setClearColor( color, opacity );
 		};
 
 		this.downloadImage = function () {

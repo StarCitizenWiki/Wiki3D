@@ -118,6 +118,10 @@ abstract class BaseSpecialPage extends SpecialPage {
 		        <input type="color" value="{$this->config['renderer']['clearColor']}" 
 		        id="clearColor">
 		    </div>
+		    <div class="form-group">
+		        <label for="opacity">{$this->msg( 'wiki3d-background-opacity' )}</label>
+		        <input type="number" value="0" min="0" max="1" step="0.1" id="opacity">
+		    </div>
         </div>
     </div>
 </div>

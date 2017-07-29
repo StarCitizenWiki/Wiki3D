@@ -80,9 +80,8 @@ $( function () {
 		document.getElementById( 'sceneDownload' ).addEventListener( 'click', function () {
 			viewer.downloadImage();
 		} );
-		document.getElementById( 'clearColor' ).addEventListener( 'change', function ( event ) {
-			viewer.changeRenderBackgroundColor( event.target.value );
-		} );
+		document.getElementById( 'clearColor' ).addEventListener( 'change', changeBackgroundColor );
+		document.getElementById( 'opacity' ).addEventListener( 'input', changeBackgroundColor );
 
 		/**
 		 * CTM Related Stuff
@@ -119,6 +118,15 @@ $( function () {
 				viewer.changeMaterialColor( event.target.value );
 			} );
 		}
+	}
+
+	function changeBackgroundColor() {
+		let color, opacity;
+
+		color = document.getElementById( 'clearColor' ).value;
+		opacity = document.getElementById( 'opacity' ).value;
+console.log(color, opacity);
+		viewer.changeRenderBackgroundColor( color, opacity );
 	}
 
 	function changeRotation( event ) {

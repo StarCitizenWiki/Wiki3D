@@ -25,6 +25,7 @@
 	"wiki3d-renderer": "Renderer",
 	"wiki3d-resolution": "Resolution",
 	"wiki3d-background-color": "Background Color",
+	"wiki3d-background-opacity": "Opacity",
 	"wiki3d-station": "Station",
 	"wiki3d-rotation": "Rotation",
 	"wiki3d-position": "Position",
