@@ -69,6 +69,7 @@ $( function () {
 		document.getElementById( 'cameraFOV' ).addEventListener( 'input', function ( event ) {
 			viewer.changeCameraFOV( event.target.value );
 		} );
+		document.getElementById( 'cameraPositionSelect' ).addEventListener( 'input', changeCameraPosition );
 		document.getElementById( 'resolutionSelect' ).addEventListener( 'input', function ( event ) {
 			let select, selected;
 
@@ -125,7 +126,7 @@ $( function () {
 
 		color = document.getElementById( 'clearColor' ).value;
 		opacity = document.getElementById( 'opacity' ).value;
-console.log(color, opacity);
+
 		viewer.changeRenderBackgroundColor( color, opacity );
 	}
 
@@ -272,6 +273,24 @@ console.log(color, opacity);
 		target = target.replace( '_color', '' );
 
 		viewer.changeLightColor( target, event.target.value );
+	}
+
+	function changeCameraPosition( event ) {
+		let select, selected, update;
+
+		update = {
+			target: 'y',
+			value: 0
+		};
+
+		viewer.updateMainObject( 'rotation', update );
+
+		document.getElementById( 'rotationY' ).value = 0;
+
+		select = event.target;
+		selected = select.options[ select.selectedIndex ].value;
+
+		viewer.setCameraPosition( selected );
 	}
 
 } );

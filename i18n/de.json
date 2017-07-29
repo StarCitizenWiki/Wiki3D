@@ -36,5 +36,11 @@
 	"wiki3d-color": "Farbe",
 	"wiki3d-material": "Material",
 	"wiki3d-wireframe": "Wireframe",
-	"wiki3d-toggle": "Umschalten"
+	"wiki3d-toggle": "Umschalten",
+	"wiki3d-position-top": "Oben",
+	"wiki3d-position-bottom": "Unten",
+	"wiki3d-position-left": "Backbord",
+	"wiki3d-position-right": "Steuerbord",
+	"wiki3d-position-front": "Bug",
+	"wiki3d-position-back": "Heck"
 }

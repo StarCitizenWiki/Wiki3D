@@ -86,6 +86,18 @@ abstract class BaseSpecialPage extends SpecialPage {
                 <input type="range" class="w3d" name="cameraFOV" id="cameraFOV" min="10" max="120" 
                 value="{$this->config['camera']['fov']}">
             </div>
+            <div class="form-group">
+                <label for="cameraPositionSelect">{$this->msg( 'wiki3d-position' )}</label>
+                <select id="cameraPositionSelect">
+                	<option value="" selected></option>
+                	<option value="top">{$this->msg( 'wiki3d-position-top' )}</option>
+                	<option value="bottom">{$this->msg( 'wiki3d-position-bottom' )}</option>
+                	<option value="left">{$this->msg( 'wiki3d-position-left' )}</option>
+                	<option value="right">{$this->msg( 'wiki3d-position-right' )}</option>
+                	<option value="front">{$this->msg( 'wiki3d-position-front' )}</option>
+                	<option value="back">{$this->msg( 'wiki3d-position-back' )}</option>
+                </select>
+            </div>            
         </div> 
         
         <div class="form-group-wrapper">

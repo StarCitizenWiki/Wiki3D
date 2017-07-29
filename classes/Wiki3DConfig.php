@@ -44,7 +44,7 @@ class Wiki3DConfig {
 		return [
 			'mainObject' => [
 				'scale' => 1,
-				'defaultSize' => 400,
+				'defaultSize' => 10,
 				'rotation' => [
 					'x' => 0,
 					'y' => M_PI_2,
@@ -65,12 +65,12 @@ class Wiki3DConfig {
 			],
 			'camera' => [
 				'fov' => 60,
-				'near' => 1,
-				'far' => 100000,
+				'near' => 0.1,
+				'far' => 1000,
 				'position' => [
 					'x' => 0,
 					'y' => 0,
-					'z' => 400,
+					'z' => 20,
 				],
 			],
 			'controls' => [
@@ -85,7 +85,7 @@ class Wiki3DConfig {
 				'rotateSpeed' => 0.1,
 				'panSpeed' => 2,
 				'minDistance' => 1,
-				'maxDistance' => 5000,
+				'maxDistance' => 500,
 			],
 			'renderer' => [
 				'parent' => 'mw-content-text',

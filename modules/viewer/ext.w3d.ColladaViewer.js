@@ -13,13 +13,45 @@
 			renderObject,
 			controlsObject,
 			cameraObject,
-			sceneGroups;
+			sceneGroups,
+			objectSize = {};
 
 		if ( !Detector.webgl ) {
 			Detector.addGetWebGLMessage( { parent: document.getElementById( 'container' + config.key ) } );
 		} else if ( typeof config !== 'undefined' ) {
 			init();
 		}
+
+		this.setCameraPosition = function ( position ) {
+			switch ( position ) {
+				case 'top':
+					cameraObject.position.set( 0, objectSize.y, 0 );
+					break;
+
+				case 'bottom':
+					cameraObject.position.set( 0, objectSize.y * -1, 0 );
+					break;
+
+				case 'front':
+					cameraObject.position.set( 0, 0, objectSize.z * -1 );
+					break;
+
+				case 'back':
+					cameraObject.position.set( 0, 0, objectSize.z );
+					break;
+
+				case 'left':
+					cameraObject.position.set( objectSize.x * -1, 0, 0 );
+					break;
+
+				case 'right':
+					cameraObject.position.set( objectSize.x, 0, 0 );
+					break;
+
+				default:
+					break;
+			}
+		};
 
 		function init() {
 			sceneGroups = mw.w3d.getSceneGroups();
@@ -57,7 +89,7 @@
 		function createRenderer() {
 			let renderer, container, progress;
 
-			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
+			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true, preserveDrawingBuffer: true } );
 			renderer.setClearColor( config.renderer.clearColor, config.renderer.opacity );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize(
@@ -146,16 +178,23 @@
 				let box, scale, scaleX, scaleY, scaleZ;
 
 				box = new THREE.Box3().setFromObject( mainObject );
-				scale = box.getSize().x / config.mainObject.defaultSize;
+
+				scale = box.max.x / config.mainObject.defaultSize;
 				scaleX = 1 / scale;
 
-				scale = box.getSize().y / config.mainObject.defaultSize;
+				scale = box.max.y / config.mainObject.defaultSize;
 				scaleY = 1 / scale;
 
-				scale = box.getSize().z / config.mainObject.defaultSize;
+				scale = box.max.z / config.mainObject.defaultSize;
 				scaleZ = 1 / scale;
 
 				scale = Math.min( scaleX, scaleY, scaleZ );
+
+				objectSize = {
+					x: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleX ),
+					y: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleY ),
+					z: 2 * config.mainObject.defaultSize + ( config.mainObject.defaultSize * scaleZ )
+				};
 
 				mainObject.scale.set( scale, scale, scale );
 
