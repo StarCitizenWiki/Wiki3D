@@ -259,9 +259,19 @@
 			}
 		};
 
+		this.changeRenderBackgroundColor = function ( color ) {
+			renderObject.setClearColor( color, 1 );
+		};
+
 		this.downloadImage = function () {
-			animate();
-			window.open( renderObject.domElement.toDataURL( 'image/png' ) );
+			let imgData, link;
+
+			imgData = renderObject.domElement.toDataURL();
+
+			link = document.createElement( 'a' );
+			link.download = 'SCW_ship_viewer_download.png';
+			link.href = imgData;
+			link.click();
 		};
 	}
 

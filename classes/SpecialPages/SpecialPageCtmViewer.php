@@ -47,9 +47,8 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
 <div class="form-group-wrapper">
     <p class="title">{$this->msg( 'wiki3d-ship' )}</p>
     <div class="form-group">
-        <label for="shipColor">{$this->msg( 'wiki3d-color' )}</label>
-        <input type="color" value="{$this->config['material']['color']}" 
-        id="color">
+        <label for="materialColor">{$this->msg( 'wiki3d-color' )}</label>
+        <input type="color" value="{$this->config['material']['color']}" id="materialColor">
     </div>
     <div class="form-group">
         <label for="shipMaterial">{$this->msg( 'wiki3d-material' )}</label>

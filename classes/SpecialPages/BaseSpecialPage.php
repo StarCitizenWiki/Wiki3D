@@ -113,6 +113,11 @@ abstract class BaseSpecialPage extends SpecialPage {
                 <select id="resolutionSelect">
                 </select>
             </div>
+		    <div class="form-group">
+		        <label for="clearColor">{$this->msg( 'wiki3d-background-color' )}</label>
+		        <input type="color" value="{$this->config['renderer']['clearColor']}" 
+		        id="clearColor">
+		    </div>
         </div>
     </div>
 </div>

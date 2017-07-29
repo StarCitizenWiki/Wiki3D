@@ -63,7 +63,7 @@
 		function createRenderer() {
 			let renderer, container, progress;
 
-			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
+			renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true, preserveDrawingBuffer: true } );
 			renderer.setClearColor( config.renderer.clearColor, config.renderer.opacity );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize(
@@ -299,9 +299,28 @@
 			}
 		};
 
+		this.changeRenderBackgroundColor = function ( color ) {
+			renderObject.setClearColor( color, 1 );
+		};
+
 		this.downloadImage = function () {
-			animate();
-			window.open( renderObject.domElement.toDataURL( 'image/png' ) );
+			let imgData, link;
+
+			imgData = renderObject.domElement.toDataURL();
+
+			link = document.createElement( 'a' );
+			link.download = 'SCW_ship_viewer_download.png';
+			link.href = imgData;
+			link.click();
+		};
+
+		this.changeLightColor = function ( lightName, color ) {
+			let light;
+
+			light = sceneObject.getObjectByName( lightName );
+			if ( typeof light !== 'undefined' ) {
+				light.color.set( color );
+			}
 		};
 	}
 

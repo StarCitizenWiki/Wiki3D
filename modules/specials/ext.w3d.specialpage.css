@@ -41,6 +41,7 @@
     left: -300px;
     transition: left 0.5s ease-in-out;
     z-index: 500;
+    font-size: 0;
 }
 
 #w3dWrapper .controls.visible {
@@ -67,6 +68,7 @@
 
 #w3dWrapper .form-group-wrapper {
     padding: 1rem 0 0 1rem;
+    font-size: 0.875rem;
 }
 
 #w3dWrapper .form-group-wrapper:last-of-type {
@@ -129,6 +131,15 @@
 #w3dWrapper .form-group-wrapper button {
     width: auto;
     padding: 5px 8px;
+}
+
+#w3dWrapper #lightList .form-group-wrapper {
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+#w3dWrapper #lightList .form-group-wrapper:last-of-type {
+    margin-bottom: 0;
 }
 
 #w3dWrapper canvas {

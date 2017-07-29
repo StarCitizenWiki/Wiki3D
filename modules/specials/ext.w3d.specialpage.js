@@ -51,7 +51,6 @@ $( function () {
 				button.innerHTML = '&swarrow;';
 			}
 		} );
-
 		document.getElementById( 'rotationX' ).addEventListener( 'input', changeRotation );
 		document.getElementById( 'rotationY' ).addEventListener( 'input', changeRotation );
 		document.getElementById( 'rotationZ' ).addEventListener( 'input', changeRotation );
@@ -80,6 +79,9 @@ $( function () {
 		} );
 		document.getElementById( 'sceneDownload' ).addEventListener( 'click', function () {
 			viewer.downloadImage();
+		} );
+		document.getElementById( 'clearColor' ).addEventListener( 'change', function ( event ) {
+			viewer.changeRenderBackgroundColor( event.target.value );
 		} );
 
 		/**
@@ -112,12 +114,9 @@ $( function () {
 			} );
 		}
 
-		if ( document.getElementById( 'color' ) !== null ) {
-			document.getElementById( 'color' ).addEventListener( 'change', function ( event ) {
-				let color;
-
-				color = event.target.value;
-				viewer.changeMaterialColor( color );
+		if ( document.getElementById( 'materialColor' ) !== null ) {
+			document.getElementById( 'materialColor' ).addEventListener( 'change', function ( event ) {
+				viewer.changeMaterialColor( event.target.value );
 			} );
 		}
 	}
@@ -188,10 +187,14 @@ $( function () {
 			let html;
 
 			html = '<div class="form-group"><label for="' + lightList[ i ].name + '">' + lightList[ i ].listName + '</label><button id="' + lightList[ i ].name + '" class="red">Toggle</button></div>';
+			/*html = '<div class="form-group-wrapper"><div class="form-group"><label for="' + lightList[ i ].name + '">' + lightList[ i ].listName + '</label><button id="' + lightList[ i ].name + '" class="red">Toggle</button></div>' +
+				'<!--<div class="form-group"><label for="' + lightList[ i ].name + '_intensity">Intensität</label><input type="range" class="w3d" min="0" max="5" step="0.25" id="' + lightList[ i ].name + '_intensity"></div>-->' +
+				'<div class="form-group"><label for="' + lightList[ i ].name + '_color">Farbe</label><input type="color" value="#ffffff" id="' + lightList[ i ].name + '_color"></div></div>';*/
 
 			listElement.insertAdjacentHTML( 'afterBegin', html );
 
 			document.getElementById( lightList[ i ].name ).addEventListener( 'click', toggleLight );
+			/*document.getElementById( lightList[ i ].name + '_color' ).addEventListener( 'change', changeLightColor );*/
 		}
 
 	}
@@ -252,6 +255,15 @@ $( function () {
 		}
 
 		viewer.toggleLight( event.target.id );
+	}
+
+	function changeLightColor( event ) {
+		let target;
+
+		target = event.target.id;
+		target = target.replace( '_color', '' );
+
+		viewer.changeLightColor( target, event.target.value );
 	}
 
 } );

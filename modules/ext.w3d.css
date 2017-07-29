@@ -2,8 +2,8 @@ canvas.has-controls {
     cursor: pointer;
 }
 
-table .w3d-wrapper {
-    margin-bottom: -6px;
+#w3dWrapper {
+    font-size: 0;
 }
 
 #w3dWrapper progress {
