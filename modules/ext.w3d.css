@@ -8,7 +8,11 @@ canvas.has-controls {
 }
 
 #w3dWrapper progress {
-    /*width: 200px;*/
+    font-size: 0.875rem;
     display: block;
     margin: 100px auto 100px;
+}
+
+.w3d-wrapper progress {
+	font-size: 0.875rem;
 }

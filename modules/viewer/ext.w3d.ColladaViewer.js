@@ -23,6 +23,7 @@
 		}
 
 		this.setCameraPosition = function ( position ) {
+			controlsObject.reset();
 			switch ( position ) {
 				case 'top':
 					cameraObject.position.set( 0, objectSize.y, 0 );

@@ -18,7 +18,7 @@
 			objectSize = {};
 
 		if ( !Detector.webgl ) {
-			Detector.addGetWebGLMessage( { parent: document.getElementById( 'container' + config.key ) } );
+			Detector.addGetWebGLMessage( { parent: document.getElementById( config.renderer.parent ) } );
 		} else if ( typeof config !== 'undefined' ) {
 			init();
 		}
@@ -28,6 +28,7 @@
 		};
 
 		this.setCameraPosition = function ( position ) {
+			controlsObject.reset();
 			switch ( position ) {
 				case 'top':
 					cameraObject.position.set( 0, objectSize.y, 0 );
