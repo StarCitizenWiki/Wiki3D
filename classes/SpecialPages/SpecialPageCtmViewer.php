@@ -15,8 +15,7 @@ class SpecialPageCtmViewer extends BaseSpecialPage {
 	public function __construct() {
 		parent::__construct( 'ShipViewer' );
 		$this->type = 'ctm';
-
-		$this->getOutput()->setPageTitle( $this->msg( 'wiki3d-shipviewer' ) );
+		$this->title = $this->msg( 'wiki3d-shipviewer' );
 	}
 
 	protected function getFileExtensionToSearch() {

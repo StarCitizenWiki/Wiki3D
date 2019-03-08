@@ -15,8 +15,7 @@ class SpecialPageColladaViewer extends BaseSpecialPage {
 	public function __construct() {
 		parent::__construct( 'StationViewer' );
 		$this->type = 'collada';
-
-		$this->getOutput()->setPageTitle( $this->msg( 'wiki3d-stationviewer' ) );
+		$this->title = $this->msg( 'wiki3d-stationviewer' );
 	}
 
 	protected function getFileExtensionToSearch() {

@@ -20,6 +20,7 @@ abstract class BaseSpecialPage extends SpecialPage {
 	protected $type;
 	protected $subPage;
 	protected $config;
+	protected $title;
 
 	/**
 	 * @var BaseBuilder
@@ -48,6 +49,7 @@ abstract class BaseSpecialPage extends SpecialPage {
 		$this->builderClass = new $this->builderClass( $this );
 
 		try {
+			$this->getOutput()->setPageTitle( $this->title );
 			$this->configureBuilder();
 			$this->builderClass->addToOutput();
 			$this->getOutput()->addHTML( $this->makeControlHtml() );
